@@ -1,25 +1,25 @@
-class AquariaController < ApplicationController
+class AquariumsController < ApplicationController
   before_action :set_aquarium, only: %i[ show edit update destroy ]
 
-  # GET /aquaria or /aquaria.json
+  # GET /aquariums or /aquariums.json
   def index
-    @aquaria = Aquarium.all
+    @aquariums = Aquarium.all
   end
 
-  # GET /aquaria/1 or /aquaria/1.json
+  # GET /aquariums/1 or /aquariums/1.json
   def show
   end
 
-  # GET /aquaria/new
+  # GET /aquariums/new
   def new
     @aquarium = Aquarium.new
   end
 
-  # GET /aquaria/1/edit
+  # GET /aquariums/1/edit
   def edit
   end
 
-  # POST /aquaria or /aquaria.json
+  # POST /aquariums or /aquariums.json
   def create
     @aquarium = Aquarium.new(aquarium_params)
 
@@ -34,7 +34,7 @@ class AquariaController < ApplicationController
     end
   end
 
-  # PATCH/PUT /aquaria/1 or /aquaria/1.json
+  # PATCH/PUT /aquariums/1 or /aquariums/1.json
   def update
     respond_to do |format|
       if @aquarium.update(aquarium_params)
@@ -47,12 +47,12 @@ class AquariaController < ApplicationController
     end
   end
 
-  # DELETE /aquaria/1 or /aquaria/1.json
+  # DELETE /aquariums/1 or /aquariums/1.json
   def destroy
     @aquarium.destroy
 
     respond_to do |format|
-      format.html { redirect_to aquaria_url, notice: "Aquarium was successfully destroyed." }
+      format.html { redirect_to aquariums_url, notice: "Aquarium was successfully destroyed." }
       format.json { head :no_content }
     end
   end

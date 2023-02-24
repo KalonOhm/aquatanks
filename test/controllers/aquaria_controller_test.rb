@@ -1,12 +1,12 @@
 require "test_helper"
 
-class AquariaControllerTest < ActionDispatch::IntegrationTest
+class AquariumsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @aquarium = aquaria(:one)
+    @aquarium = aquariums(:one)
   end
 
   test "should get index" do
-    get aquaria_url
+    get aquariums_url
     assert_response :success
   end
 
@@ -17,7 +17,7 @@ class AquariaControllerTest < ActionDispatch::IntegrationTest
 
   test "should create aquarium" do
     assert_difference("Aquarium.count") do
-      post aquaria_url, params: { aquarium: { filter: @aquarium.filter, plants: @aquarium.plants, size: @aquarium.size, user_id: @aquarium.user_id, water_type: @aquarium.water_type } }
+      post aquariums_url, params: { aquarium: { filter: @aquarium.filter, plants: @aquarium.plants, size: @aquarium.size, user_id: @aquarium.user_id, water_type: @aquarium.water_type } }
     end
 
     assert_redirected_to aquarium_url(Aquarium.last)
@@ -43,6 +43,6 @@ class AquariaControllerTest < ActionDispatch::IntegrationTest
       delete aquarium_url(@aquarium)
     end
 
-    assert_redirected_to aquaria_url
+    assert_redirected_to aquariums_url
   end
 end

@@ -1,17 +1,17 @@
 require "application_system_test_case"
 
-class AquariaTest < ApplicationSystemTestCase
+class AquariumsTest < ApplicationSystemTestCase
   setup do
-    @aquarium = aquaria(:one)
+    @aquarium = aquariums(:one)
   end
 
   test "visiting the index" do
-    visit aquaria_url
-    assert_selector "h1", text: "Aquaria"
+    visit aquariums_url
+    assert_selector "h1", text: "Aquariums"
   end
 
   test "should create aquarium" do
-    visit aquaria_url
+    visit aquariums_url
     click_on "New aquarium"
 
     fill_in "Filter", with: @aquarium.filter

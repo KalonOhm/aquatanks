@@ -49,8 +49,10 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 gem "open-uri"
 gem "nokogiri"
+gem "pry"
+
 gem "sassc-rails"
-gem 'bootstrap'
+gem "bootstrap"
 
 
 group :development, :test do

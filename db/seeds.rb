@@ -5,13 +5,30 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+Fish.destroy_all
 
-test_fish = {
+Fish.create!([
+  {
   common_name: "Guppy",
   taxonomic_name: "Poecilia reticulata",
   image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
   size: "3cm",
   other_remarks: "Will breed like rabbits",
-}
+},
+{
+  common_name: "Brown-Point Shield Skin",
+  taxonomic_name: "Aspidoras fuscoguttatus",
+  image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
+  size: "3.8cm",
+  other_remarks: "",
+},
+])
+
+Aquarium.destroy_all
+
+User.destroy_all
+
+
+  
 
 

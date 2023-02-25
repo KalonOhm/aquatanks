@@ -1,12 +1,12 @@
 class SessionsController < ApplicationController 
-  before_action :set_user?, except [:destroy]
+  before_action :set_user?, except: [:destroy]
 
   #GET login page
   def new 
   end
 
   def create 
-    user = user.find_by(email: params[:email])
+    user = User.find_by(email: params[:email])
 
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id 
@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       redirect_to aquariums_path
     else
       flash[:notice] = "Login failed"
-      render :new, status unprocessable_entity
+      render :new, status: unprocessable_entity
     end
   end
 

@@ -1,5 +1,7 @@
 <h1>Aquariums path</h1>
 
+<%= render @aquarium%>
+
 <% if current_user == @aquarium.user %>
   <% link_to "Edit", edit_aquarium_path(@aquarium) %>
   <% button_to "Delete", @aquarium, method: :delete %>

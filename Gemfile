@@ -53,6 +53,7 @@ gem "pry"
 
 gem "sassc-rails"
 gem "bootstrap"
+gem "bcrypt"
 
 
 group :development, :test do

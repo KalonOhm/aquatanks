@@ -7,11 +7,11 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 test_fish = {
-  common_name: "Guppy"
-  taxonomic_name: "Poecilia reticulata"
-  image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg"
-  size: "3cm"
-  other_remarks: "Will breed like rabbits"
+  common_name: "Guppy",
+  taxonomic_name: "Poecilia reticulata",
+  image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
+  size: "3cm",
+  other_remarks: "Will breed like rabbits",
 }
 
 

@@ -1,10 +1,6 @@
-<p style="color: green"><%= notice %></p>
+<h1>Aquariums path</h1>
 
-<%= render @aquarium %>
-
-<div>
-  <%= link_to "Edit this aquarium", edit_aquarium_path(@aquarium) %> |
-  <%= link_to "Back to aquariums", aquariums_path %>
-
-  <%= button_to "Destroy this aquarium", @aquarium, method: :delete %>
-</div>
+<% if current_user == @aquarium.user %>
+  <% link_to "Edit", edit_aquarium_path(@aquarium) %>
+  <% button_to "Delete", @aquarium, method: :delete %>
+<% end %>

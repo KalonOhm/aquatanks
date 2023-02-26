@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController 
-  before_action :set_user?, except: [:destroy]
+  before_action :is_signed_in?, except: [:destroy]
 
   #GET login page
   def new 
@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       redirect_to aquariums_path
     else
       flash[:notice] = "Login failed"
-      render :new, status: unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 

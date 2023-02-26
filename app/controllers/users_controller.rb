@@ -1,12 +1,10 @@
 class UsersController < ApplicationController
-  before_action :set_user?, only: [:new, :create]
+  before_action :is_signed_in?, only: [:new, :create]
 
   # GET /users/new
     def new
       @user = User.new
     end
-
-  
 
   # POST /users or /users.json
   def create

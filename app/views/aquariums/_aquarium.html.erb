@@ -2,4 +2,12 @@
 <p>Salinity: <%= aquarium.water_type%></p>
 <p>Filter Style: <%= aquarium.filter %></p>
 <p>Live plants? <%= aquarium.plants %></p>
-<p>Owner: <%= aquarium.user.name %></p>
+
+<% if aquarium.user %>
+  <p>Owner: <%= aquarium.user.name %></p>
+<% end %>
+
+<% if current_user == @aquarium.user %>
+  <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
+  <%= button_to "Delete", @aquarium, method: :delete %>
+<% end %>

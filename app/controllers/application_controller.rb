@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     end
   end  
   
-  def set_user?
+  def is_signed_in?
     if !guest?
       flash[:notice] = "Already signed in"
       redirect_to aquariums_path

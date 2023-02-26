@@ -15,7 +15,7 @@ class AquariumsTest < ApplicationSystemTestCase
     click_on "New aquarium"
 
     fill_in "Filter", with: @aquarium.filter
-    check "Plants" if @aquarium.plants
+    fill_in "Plants", with: @aquarium.plants
     fill_in "Size", with: @aquarium.size
     fill_in "User", with: @aquarium.user_id
     fill_in "Water type", with: @aquarium.water_type
@@ -30,7 +30,7 @@ class AquariumsTest < ApplicationSystemTestCase
     click_on "Edit this aquarium", match: :first
 
     fill_in "Filter", with: @aquarium.filter
-    check "Plants" if @aquarium.plants
+    fill_in "Plants", with: @aquarium.plants
     fill_in "Size", with: @aquarium.size
     fill_in "User", with: @aquarium.user_id
     fill_in "Water type", with: @aquarium.water_type

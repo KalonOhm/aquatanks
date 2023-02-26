@@ -1,4 +1,4 @@
-<%= form_with(model: aquarium) do |form| %>
+<%= form_with(model: @aquarium) do |form| %>
   <% if aquarium.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(aquarium.errors.count, "error") %> prohibited this aquarium from being saved:</h2>
@@ -12,29 +12,30 @@
   <% end %>
 
   <div>
-    <%= form.label :size, style: "display: block" %>
+    <%= form.label :size, "Tank Volume (gallons)", style: "display: block" %>
     <%= form.number_field :size %>
   </div>
 
   <div>
-    <%= form.label :water_type, style: "display: block" %>
-    <%= form.text_field :water_type %>
+    <%= form.label :water_type, "Water type/salinity", style: "display: block" %>
+    <%= form.select :water_type, ["Freshwater", "Saltwater", "Brackish Water"] %>
   </div>
 
   <div>
-    <%= form.label :filter, style: "display: block" %>
-    <%= form.text_field :filter %>
+    <%= form.label :filter, "Filter Style", style: "display: block" %>
+    <%= form.select :filter, ["Box (Corner/Internal)", "Canister", "Diatomic", "Fluidized Bed", "Power (Hang-on-Back)", "Sponge", "Under-Gravel", "Wet/Dry (Trickle)", "Other"] %>
   </div>
 
   <div>
-    <%= form.label :plants, style: "display: block" %>
-    <%= form.check_box :plants %>
+    <%= form.label :plants, "Aquascaping", style: "display: block" %>
+    <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]] %>
   </div>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
+  <%# <div> %>
+    <%#= form.label :user_id, style: "display: block" %>
+    <%#= form.text_field :user_id %>
+  <%# </div> %>
+
 
   <div>
     <%= form.submit %>

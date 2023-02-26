@@ -21,7 +21,7 @@ class AquariumsController < ApplicationController
 
   # POST /aquariums or /aquariums.json
   def create
-    @aquarium = Aquarium.new(aquarium_params)
+    @aquarium = helpers.current_user.aquariums.new(aquarium_params)
 
     respond_to do |format|
       if @aquarium.save
@@ -65,6 +65,7 @@ class AquariumsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def aquarium_params
-      params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :user_id)
+      params.require(:aquarium).permit(:size, :water_type, :filter, :plants)
+      # removed :user_id from params list
     end
 end

@@ -11,7 +11,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      session[:user_id] = @user.id 
       flash[:notice] = "Successfully created profile"
+      
       redirect_to root_path
     else 
       render :new, status: :unprocessable_entity
@@ -21,6 +23,7 @@ class UsersController < ApplicationController
   # GET /users/1 or /users/1.json
     def show
       @user = User.find(params[:id])
+      @user_aquariums = @user.aquariums
     end
 
   private

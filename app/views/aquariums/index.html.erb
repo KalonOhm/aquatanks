@@ -1,5 +1,5 @@
 <h1>Aquariums</h1>
-
+<%= link_to "New aquarium", new_aquarium_path %>
 <div id="aquariums">
   <% @aquariums.each do |aquarium| %>
     <%= render aquarium %>
@@ -9,4 +9,4 @@
   <% end %>
 </div>
 
-<%= link_to "New aquarium", new_aquarium_path %>
+

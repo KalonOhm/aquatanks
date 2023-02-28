@@ -3,11 +3,13 @@
 <p>Filter Style: <%= aquarium.filter %></p>
 <p>Live plants? <%= aquarium.plants %></p>
 
-<% if aquarium.user %>
-  <p>Owner: <%= aquarium.user.name %></p>
-<% end %>
 
-<% if current_user == @aquarium.user %>
-  <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
+
+<% if current_user == aquarium.user %>
+  <%= link_to "Edit", edit_aquarium_path(aquarium) %>
   <%= button_to "Delete", @aquarium, method: :delete %>
+<% else %>
+<%# if aquarium.user %>
+  <p>Owner: <%= aquarium.user.name %></p>
+<%# end %>
 <% end %>

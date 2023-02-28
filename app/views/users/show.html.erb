@@ -1,2 +1,5 @@
-<h1>User View</h1>
+<h1><%=@user.name%>'s Aquariums</h1>
 
+<%= render @user_aquariums%>
+
+<%= link_to "New aquarium", new_aquarium_path %>

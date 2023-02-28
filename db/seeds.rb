@@ -7,6 +7,9 @@
 #   Character.create(name: "Luke", movie: movies.first)
 Fish.destroy_all
 
+
+
+
 Fish.create!([
   {
   common_name: "Guppy",
@@ -24,9 +27,11 @@ Fish.create!([
 },
 ])
 
-Aquarium.destroy_all
 
-User.destroy_all
+
+# Aquarium.destroy_all
+
+# User.destroy_all
 
 
   

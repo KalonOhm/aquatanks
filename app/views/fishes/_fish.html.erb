@@ -1,9 +1,16 @@
+
+
 <div>
   <p>Fish Facts:</p>
   <p>Name(s): <%= fish.common_name %></p>
   <p>Taxonomy: <%= fish.taxonomic_name %></p>
-  <img src="<%= fish.image_url %>" alt="#{fish.name}">
+  <% if fish.image_url != nil %>
+    <img src="<%= fish.image_url %>" alt="#{fish.name}">
+  <% else %>
+  <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="<%= fish.common_name %>">
+  <% end%>
   <p>Size: <%= fish.size %></p>
-  <p>Add'l info: <%= fish.other_remarks %></p>
+  <p><%= fish.other_remarks %></p>
 </div>
+
 

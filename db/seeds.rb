@@ -6,8 +6,8 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-
-Fish.destroy_all
+Fish.delete_all
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='fishes'")
 
 require 'pry'
 require 'nokogiri'
@@ -29,13 +29,18 @@ class FishScraper
         next if fish_row.css('th').any?
         cell = fish_row.css('td')
 
-        common_name = cell[0].text
-        taxonomic_name = cell[1].text
-        image_url = "https:" + cell[2].css('img').first['src']
-        # somehow need to remove first 2 // only
-        size = cell[3].text.split[1]
+        common_name = cell[0]&.text
+        taxonomic_name = cell[1]&.text
+        image_src = (cell[2]&.css('img')&.first&.[]('src')||'')
+        if image_src != ""
+          image_url = "http:" + image_src
+        else
+          image_url = nil
+        end
+        # use "safe navigation operator" (`&.`)
+        size = (cell[3]&.text&.split[1])#&.gsub(/\((\d+(\.\d+)?)\s*in\)/, '\1')
         # need to remove "()" and possibly in
-        other_remarks = cell[4].text
+        other_remarks = (cell[4]&.text).gsub(/\n/, '')
         # need to remove \n chars.
 
         fish = {
@@ -43,7 +48,8 @@ class FishScraper
           taxonomic_name: taxonomic_name,
           image_url: image_url,
           size: size,
-          other_remarks: other_remarks
+          other_remarks: other_remarks,
+          preferred_water: "freshwater"
         }
 
         freshwater_aquarium_fish_species << fish
@@ -66,13 +72,18 @@ class FishScraper
         next if fish_row.css('th').any?
         cell = fish_row.css('td')
         
-        common_name = cell[0].text
-        taxonomic_name = cell[1].text
-        image_url = "https:" + cell[2].css('img').first['src']
-        # somehow need to remove first 2 // only
-        size = cell[3].text.split[1]
+        common_name = cell[0]&.text
+        taxonomic_name = cell[1]&.text
+        image_src = ((cell[2]&.css('img')||[]).first&.[]('src')||'')
+        if image_src != ""
+          image_url = "http:" + image_src
+        else
+          image_url = nil
+        end
+        # use "safe navigation operator" (`&.`)
+        size = (cell[3]&.text||'')&.gsub(/\((\d+\.\d+)\s*in\)|"|\s+in/, '\1')
         # need to remove "()" and possibly in
-        other_remarks = cell[4].text
+        other_remarks = (cell[4]&.text||'').gsub(/\n/, '')
         # need to remove \n chars.
 
         fish = {
@@ -80,7 +91,8 @@ class FishScraper
           taxonomic_name: taxonomic_name,
           image_url: image_url,
           size: size,
-          other_remarks: other_remarks
+          other_remarks: other_remarks,
+          preferred_water: "brackish_water",
         }
 
         brackish_aquarium_fish_species << fish
@@ -106,21 +118,26 @@ class FishScraper
         next if fish_row.css('th').any?
         cell = fish_row.css('td')
         
-        common_name = cell[0].text
-        taxonomic_name = cell[2].text
-        image_url = "https:" + cell[1].css('img').first['src']
-        # somehow need to remove first 2 // only
-        size = cell[5].text.split[1]
+        common_name = cell[0]&.text
+        taxonomic_name = cell[2]&.text
+        image_src = (cell[1]&.css('img')&.first&.[]('src')||'')
+        if image_src != ""
+          image_url = "http:" + image_src
+        else
+          image_url = nil
+        end
+        # use "safe navigation operator" (`&.`)
+        size = (cell[-1]&.text&.split[1])#&.gsub(/\((\d+(\.\d+)?)\s*in\)/, '\1')
         # need to remove "()" and possibly in
-        other_remarks = cell[4].text
-        # need to remove \n chars.
+        other_remarks = (cell[4]&.text).gsub(/\n/, '')
 
         fish = {
           common_name: common_name,
           taxonomic_name: taxonomic_name,
           image_url: image_url,
           size: size,
-          other_remarks: other_remarks
+          other_remarks: other_remarks,
+          preferred_water: "saltwater"
         }
 
         marine_aquarium_fish_species << fish
@@ -138,37 +155,41 @@ marine_aquarium_fish_species = FishScraper.scrape_saltwater
 fishes_master_list = freshwater_aquarium_fish_species + brackish_aquarium_fish_species + marine_aquarium_fish_species
 
 fishes_master_list.each do |fish|
-  Fish.create!(
-    common_name: fish[:common_name],
-    taxonomic_name: fish[:taxonomic_name],
-    image_url: fish[:image_url],
-    size: fish[:size],
-    other_remarks: fish[:other_remarks],
-  )
+  Fish.create!(fish)
 end
+# puts fishes_master_list
 
+# fishes_master_list.each do |fish|
+#   puts fish[:common_name]
+#   puts fish[:taxonomic_name]
+#   puts fish[:image_url]
+#   puts fish[:size]
+#   puts fish[:other_remarks]
+#   puts fish[:preferred_water]
+# end
 
-Fish.create!([
-  {
-  common_name: "Guppy",
-  taxonomic_name: "Poecilia reticulata",
-  image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
-  size: "3cm",
-  other_remarks: "Will breed like rabbits",
-},
-{
-  common_name: "Brown-Point Shield Skin",
-  taxonomic_name: "Aspidoras fuscoguttatus",
-  image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
-  size: "3.8cm",
-  other_remarks: "",
-},
-])
+# Fish.create!([
 
-
-
+# sampleFish = ([
+#   {
+#   common_name: "Guppy",
+#   taxonomic_name: "Poecilia reticulata",
+#   image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
+#   size: "3cm",
+#   other_remarks: "Will breed like rabbits",
+#   preferred_water: "brackish_water"
+# },
+# {
+#   common_name: "Brown-Point Shield Skin",
+#   taxonomic_name: "Aspidoras fuscoguttatus",
+#   image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Aspidoras_fuscoguttatus.jpg/175px-Aspidoras_fuscoguttatus.jpg",
+#   size: "3.8cm",
+#   other_remarks: "",
+#   preferred_water: "freshwater"
+# },
+# ])
+# puts sampleFish
 # Aquarium.destroy_all
-
 # User.destroy_all
 
 

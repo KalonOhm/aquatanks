@@ -13,8 +13,8 @@ class SessionsController < ApplicationController
       flash[:notice] = "Login successful"
       redirect_to aquariums_path
     else
-      flash[:notice] = "Login failed"
       render :new, status: :unprocessable_entity
+      flash[:notice] = "Login failed"
     end
   end
 

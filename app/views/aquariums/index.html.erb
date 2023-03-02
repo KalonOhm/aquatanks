@@ -1,8 +1,12 @@
 <h1>Aquariums</h1>
-<%= link_to "New aquarium", new_aquarium_path %>
+<div><%= link_to "New aquarium", new_aquarium_path %></div>
+<br>
 <div id="aquariums">
   <% @aquariums.each do |aquarium| %>
-    <%= render aquarium %>
+  <span><%= aquarium.size %> gallon <%= aquarium.water_type%> aquarium</span><br>
+  <span>Owner: <%= link_to "#{aquarium.user.name}", @user %></span>
+  <%# TODO: actually link to a User page for other users, so you can look at other pages? %>
+    <%#= render aquarium %>
     <p>
       <%= link_to "Show this aquarium", aquarium %>
     </p>

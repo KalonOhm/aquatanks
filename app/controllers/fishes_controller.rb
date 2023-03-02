@@ -4,10 +4,12 @@ class FishesController < ApplicationController
   # GET /fish or /fish.json
   def index
     @fishes = Fish.all
+    
   end
 
   # GET /fishes/1 or /fishes/1.json
   def show
+    @fish = Fish.find(params[:id])
   end
 
   # GET /fishes/new

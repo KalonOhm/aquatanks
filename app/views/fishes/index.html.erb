@@ -4,7 +4,10 @@
 
 <div id="fishes">
   <% @fishes.each do |fish| %>
-    <%= render fish %>
+  <span class="font-weight-bold"><%= fish.common_name %></span>
+  <br>
+  <span class="font-italic"><%= fish.taxonomic_name %></span>
+    <%#= render fish %>
     <p>
       <%= link_to "Show this fish", fish %>
     </p>

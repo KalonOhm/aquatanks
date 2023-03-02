@@ -8,6 +8,7 @@ class AquariumsController < ApplicationController
 
   # GET /aquariums/1 or /aquariums/1.json
   def show
+    
   end
 
   # GET /aquariums/new
@@ -55,6 +56,14 @@ class AquariumsController < ApplicationController
       format.html { redirect_to aquariums_url, notice: "Aquarium was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def add_fish
+    @aquarium = Aquarium.find(params[:id])
+    @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field 
+    @count = params[:count].to_i
+    @aquarium.aquariums_fishes.create(fish: @fish, count: @count)
+    redirect_to @aquarium
   end
 
   private

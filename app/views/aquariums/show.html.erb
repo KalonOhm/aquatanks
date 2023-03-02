@@ -3,8 +3,16 @@
 <%= render @aquarium%>
 
 
-<% link_to "Show", aquarium_path(@aquarium)%>
+<%#= link_to "Show", aquarium_path(@aquarium)%>
 <% if current_user == @aquarium.user %>
-  <% link_to "Edit", edit_aquarium_path(@aquarium) %>
-  <% button_to "Delete", @aquarium, method: :delete %>
+  <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
+  <%= button_to "Delete", @aquarium, method: :delete %>
+  <br> <br>
+
+  <%= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
+    <%= submit_tag 'Add Fish'%>
+  <% end %>
+
 <% end %>
+
+

@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   resources :fishes
   resources :users, except: [:new]
-  resources :aquariums #do 
+  resources :aquariums
+  resources :aquariums do 
+    member do
+      post 'add_fish'
+    end
+  end
 
 
   root to: "pages#home"

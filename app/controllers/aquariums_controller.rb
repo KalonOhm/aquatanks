@@ -8,7 +8,7 @@ class AquariumsController < ApplicationController
 
   # GET /aquariums/1 or /aquariums/1.json
   def show
-    
+    @aquarium = Aquarium.find(params[:id])
   end
 
   # GET /aquariums/new

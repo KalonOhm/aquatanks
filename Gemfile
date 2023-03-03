@@ -52,9 +52,8 @@ gem "nokogiri"
 gem "pry"
 
 gem "sassc-rails"
-gem "bootstrap"
 gem "bcrypt"
-
+gem "tailwindcss-rails", "~> 2.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -78,3 +77,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   delete '/logout', to: "sessions#destroy"
   get '/sign-up', to: "users#new"
 
+  get 'search_fishes', to: 'fishes#search'
 
   
 end

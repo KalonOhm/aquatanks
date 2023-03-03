@@ -9,9 +9,22 @@
   <%= button_to "Delete", @aquarium, method: :delete %>
   <br> <br>
 
+  <%#= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
+      <%# Selectable dropdown list of all 1000+ fish %>
+      <%#= select_tag :fish_id, options_for_select(Fish.all.map{ |f| [f.common_name, f.id] }) %> 
+
   <%= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
+    <div class="form-group">
+      <%= label_tag :fish_search, 'Search for a fish' %>
+      <%= text_field_tag :fish_search, '', class: 'form-control', data: { autocomplete_source: ("https://en.wikipedia.org/wiki/List_of_freshwater_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_brackish_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_marine_aquarium_fish_species") } %>
+      </div>
+    <%# not currently breaking things, just not working %>
+
+    <%= hidden_field_tag :fish_id %>
+    <%= number_field_tag :count, value: 1, min: 1 %>
     <%= submit_tag 'Add Fish'%>
   <% end %>
+
 
 <% end %>
 

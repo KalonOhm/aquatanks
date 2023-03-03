@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html class="sm:scroll-smooth">
   <head>
     <title>Aquatanks</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <%= favicon_link_tag asset_path('tropical-fish_1f420.png') %>
   </head>
 
-  <body>
+  <body class="min-h-screen bg-cyan-100 dark:bg-cyan-600" >
     <%= render "shared/nav" %>
     <%= yield %>
   </body>

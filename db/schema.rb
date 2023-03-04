@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_01_230604) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_03_200230) do
   create_table "aquariums", force: :cascade do |t|
     t.integer "size"
     t.string "water_type"
@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_230604) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.string "substrate"
   end
 
   create_table "aquariums_fishes", force: :cascade do |t|

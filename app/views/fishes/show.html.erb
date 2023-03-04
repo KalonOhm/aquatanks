@@ -1,7 +1,10 @@
-
-
-<%= render @fish %>
-
-<div>
-  <%= link_to "Back to fishes", fishes_path %>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium">Fish Facts</h1>
+<br>
+<div class="m-auto block" >
+  <%= render @fish %>
+  <button class="text-xs">
+    <%= link_to "Back to Fish List", fishes_path %>
+  </button>
 </div>
+
+

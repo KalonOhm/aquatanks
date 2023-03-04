@@ -1,6 +1,6 @@
 <%= form_with(model: @aquarium) do |form| %>
   <% if aquarium.errors.any? %>
-    <div style="color: red">
+    <div class="text-orange-400">
       <h2><%= pluralize(aquarium.errors.count, "error") %> prohibited this aquarium from being saved:</h2>
 
       <ul>
@@ -10,6 +10,8 @@
       </ul>
     </div>
   <% end %>
+
+
 
   <div>
     <%= form.label :size, "Tank Volume (gallons)", style: "display: block" %>
@@ -29,6 +31,11 @@
   <div>
     <%= form.label :plants, "Aquascaping", style: "display: block" %>
     <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]] %>
+  </div>
+
+  <div>
+    <%= form.label :filter, "Substrate", style: "display: block" %>
+    <%= form.select :filter, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"] %>
   </div>
 
   <%# <div> %>

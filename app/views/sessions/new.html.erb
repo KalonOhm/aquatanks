@@ -1,14 +1,15 @@
-<h1>Login Page</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium">Welcome back!</h1>
+<div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
+  <%= form_with do |form| %>
+    <div>
+    <%= form.label :email, style: "display: block"  %>
+    <%= form.text_field :email, style: "display: block"  %>
+    </div>
+    <div>
+      <%= form.label :password, style: "display: block"  %>
+      <%= form.password_field :password%>
+    </div>
+    <%= form.submit "Login" %>
+  <% end %>
+</div>
 
-
-<%= form_with do |form| %>
-  <div>
-  <%= form.label :email %>
-  <%= form.text_field :email %>
-  </div>
-  <div>
-    <%= form.label :password %>
-    <%= form.password_field :password%>
-  </div>
-  <%= form.submit "Login" %>
-<% end %>

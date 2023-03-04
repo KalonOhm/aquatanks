@@ -74,7 +74,7 @@ class AquariumsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def aquarium_params
-      params.require(:aquarium).permit(:size, :water_type, :filter, :plants)
+      params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate)
       # removed :user_id from params list
     end
 end

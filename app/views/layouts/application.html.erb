@@ -13,8 +13,12 @@
     <%= favicon_link_tag asset_path('tropical-fish_1f420.png') %>
   </head>
 
-  <body class="min-h-screen bg-cyan-100 dark:bg-cyan-600" >
+  <body class="min-h-screen bg-cyan-100 dark:bg-cyan-900 dark:text-cyan-100" >
     <%= render "shared/nav" %>
-    <%= yield %>
+
+    <div class="container mx-auto px-4 dark:text-cyan-100">
+      <%= yield %>
+    </div>
+    
   </body>
 </html>

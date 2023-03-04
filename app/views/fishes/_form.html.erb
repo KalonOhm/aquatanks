@@ -1,6 +1,6 @@
 <%= form_with(model: fish) do |form| %>
   <% if fish.errors.any? %>
-    <div style="color: red">
+    <div class="text-orange-400">
       <h2><%= pluralize(fish.errors.count, "error") %> prohibited this fish from being saved:</h2>
 
       <ul>
@@ -10,6 +10,10 @@
       </ul>
     </div>
   <% end %>
+
+  <div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
+
+  </div>
 
   <div>
     <%= form.label :common_name, style: "display: block" %>

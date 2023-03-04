@@ -1,15 +1,17 @@
-
-
-<h1>Fishes</h1>
-
-<div id="fishes">
+<h1 class="text-center font-semibold text-3xl underline underline-offset-4">Aquarium Fish</h1>
+<br>
+<div id="fishes" class="columns-2xs">
   <% @fishes.each do |fish| %>
-  <span class="font-weight-bold"><%= fish.common_name %></span>
-  <br>
-  <span class="font-italic"><%= fish.taxonomic_name %></span>
-    <%#= render fish %>
-    <p>
-      <%= link_to "Show this fish", fish %>
-    </p>
+  <div class="">
+    <div class="card w-full mb-4">
+      <div class="card-body">
+        <h5 class="font-bold card-title"><%= fish.common_name %></h5>
+        <p class="italic card-text"><%= fish.taxonomic_name %></p>
+        <button class="text-xs">
+          <%= link_to "More info...", fish %>
+        </button>
+      </div>
+    </div>
+  </div>
   <% end %>
 </div>

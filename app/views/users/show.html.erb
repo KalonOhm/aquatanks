@@ -1,14 +1,18 @@
-<h1 class="text-center underline underline-offset-4 text-3xl font-medium"><%=@user.name%>'s Aquariums</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%=@user.name%>'s Aquariums</h1>
 
-<%= link_to "New aquarium", new_aquarium_path %>
-<br>
-
+<div id="aquariums" class="columns-3xs">
 <% @user_aquariums.each do |aquarium|%>
-  <span><%= aquarium.size %> gallon <%= aquarium.water_type%> aquarium</span><br>
-  <span>Owner: <%= link_to "#{aquarium.user.name}", @user %></span>
-  <%# TODO: actually link to a User page for other users, so you can look at other pages? %>
-    <%#= render aquarium %>
-    <p>
-      <%= link_to "Show this aquarium", aquarium %>
-    </p>
-<% end %>
+
+  <div>
+    <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="Aquarium image">
+    <p class="text-xl"><%= aquarium.size %> gallon </p>
+    <p class="text-lg"><%= aquarium.water_type%> aquarium</p>
+    <span class="text-sm">Owner: <%= link_to "#{aquarium.user.name}", @user %></span>
+    <%# TODO: actually link to a User page for other users, so you can look at other pages? %>
+      <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
+        <%= link_to "Show this aquarium", aquarium %>
+      </button>
+  </div>
+
+  <% end %>
+</div>

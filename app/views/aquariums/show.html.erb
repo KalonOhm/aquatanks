@@ -1,15 +1,16 @@
-
-<h1 class="text-center underline underline-offset-4 text-3xl font-medium">Fish Facts</h1>
-<h1><%= @aquarium.user.name %>'s Aquarium</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%= @aquarium.user.name %>'s Aquarium</h1>
 
 <%= render @aquarium%>
 
 
 <%#= link_to "Show", aquarium_path(@aquarium)%>
 <% if current_user == @aquarium.user %>
-  <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
-  <%= button_to "Delete", @aquarium, method: :delete %>
-  <br> <br>
+  <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
+    <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
+  </button>
+  <span class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
+    <%= button_to "Delete", @aquarium, method: :delete %>
+  </span>
 
   <%#= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
       <%# Selectable dropdown list of all 1000+ fish %>

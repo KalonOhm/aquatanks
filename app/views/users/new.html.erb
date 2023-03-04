@@ -1,4 +1,4 @@
-<h1 class="text-center underline underline-offset-4 text-3xl font-medium">Welcome!</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Welcome!</h1>
 <%#catch errors%>
 <% if @user.errors.any? %>
   <div class="text-orange-400">
@@ -14,15 +14,15 @@
 
 <div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
   <%= form_with(model: @user) do |form| %>
-    <div>
+    <div class="dark:text-teal-900">
       <%= form.label :name, style: "display: block"  %>
       <%= form.text_field :name %>
     </div>
-    <div>
+    <div class="dark:text-teal-900">
       <%= form.label :email, style: "display: block"  %>  
       <%= form.text_field :email %>
     </div>
-    <div>
+    <div class="dark:text-teal-900">
       <%= form.label :password, style: "display: block"  %>  
       <%= form.password_field :password %>
     </div>

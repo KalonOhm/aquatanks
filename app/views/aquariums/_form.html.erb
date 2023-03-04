@@ -11,29 +11,27 @@
     </div>
   <% end %>
 
-
-
-  <div>
+  <div class="dark:text-teal-900">
     <%= form.label :size, "Tank Volume (gallons)", style: "display: block" %>
     <%= form.number_field :size %>
   </div>
 
-  <div>
+  <div class="dark:text-teal-900">
     <%= form.label :water_type, "Water type/salinity", style: "display: block" %>
     <%= form.select :water_type, ["Freshwater", "Saltwater", "Brackish Water"] %>
   </div>
 
-  <div>
+  <div class="dark:text-teal-900">
     <%= form.label :filter, "Filter Style", style: "display: block" %>
     <%= form.select :filter, ["Box (Corner/Internal)", "Canister", "Diatomic", "Fluidized Bed", "Power (Hang-on-Back)", "Sponge", "Under-Gravel", "Wet/Dry (Trickle)", "Other"] %>
   </div>
 
-  <div>
+  <div class="dark:text-teal-900">
     <%= form.label :plants, "Aquascaping", style: "display: block" %>
     <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]] %>
   </div>
 
-  <div>
+  <div class="dark:text-teal-900">
     <%= form.label :filter, "Substrate", style: "display: block" %>
     <%= form.select :filter, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"] %>
   </div>
@@ -44,7 +42,7 @@
   <%# </div> %>
 
 
-  <div>
+  <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
     <%= form.submit %>
-  </div>
+  </button>
 <% end %>

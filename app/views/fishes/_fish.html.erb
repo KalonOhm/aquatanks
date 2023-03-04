@@ -1,19 +1,19 @@
 
 <div class="card w-full mb-4">
-  <div class="card-body">
-  <h2 class="font-bold card-title"> 
-    <%= fish.common_name %>
-  </h2>
-  <p class="italic card-text">
-    <%= fish.taxonomic_name %>
-  </p>
-  <% if fish.image_url != nil %>
-    <img src="<%= fish.image_url %>" alt="<%= fish.common_name %>">
-  <% else %>
-  <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="<%= fish.common_name %>">
-  <% end%>
-  <p class="card-text">Size: <%= fish.size %></p>
-  <p class="card-text"><%= fish.other_remarks %></p>
-</div>
+  <div class=" ">
+    <h2 class="font-bold "> 
+      <%= fish.common_name %>
+    </h2>
+    <p class="italic ">
+      <%= fish.taxonomic_name %>
+    </p>
+    <% if fish.image_url != nil %>
+      <img class="rounded-lg" src="<%= fish.image_url %>" alt="<%= fish.common_name %>">
+    <% else %>
+    <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="<%= fish.common_name %>">
+    <% end%>
+    <p class=" ">Size: <%= fish.size %></p>
+    <p class=" "><%= fish.other_remarks %></p>
+  </div>
 </div>
 

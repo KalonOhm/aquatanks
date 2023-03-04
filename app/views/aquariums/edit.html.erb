@@ -1,11 +1,17 @@
-<h1 class="text-center underline underline-offset-4 text-3xl font-medium">Fish Facts</h1>
-<h1>Editing aquarium</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Edit Aquarium</h1>
 
-<%= render "form", aquarium: @aquarium %>
+<div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
+  <%= render "form", aquarium: @aquarium %>
 
-<br>
+  <br>
 
-<div>
-  <%= link_to "Back", @aquarium %> |
-  <%= link_to "All Aquariums", aquariums_path %>
+  <div>
+    <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
+    <%= link_to "Back", @aquarium %>
+    </button>
+     <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
+     <%= link_to "All Aquariums", aquariums_path %>
+     </button>
+    
+  </div>
 </div>

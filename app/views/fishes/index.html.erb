@@ -1,5 +1,4 @@
-<h1 class="text-center font-semibold text-3xl underline underline-offset-4">Aquarium Fish</h1>
-<br>
+<h1 class="text-center font-semibold text-3xl underline underline-offset-4 mb-4">Aquarium Fish</h1>
 <div id="fishes" class="columns-2xs">
   <% @fishes.each do |fish| %>
   <div class="">
@@ -7,7 +6,7 @@
       <div class="card-body">
         <h5 class="font-bold card-title"><%= fish.common_name %></h5>
         <p class="italic card-text"><%= fish.taxonomic_name %></p>
-        <button class="text-xs">
+        <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
           <%= link_to "More info...", fish %>
         </button>
       </div>

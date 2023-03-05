@@ -11,38 +11,29 @@
     </div>
   <% end %>
 
-  <div class="dark:text-teal-900">
+  
     <%= form.label :size, "Tank Volume (gallons)", style: "display: block" %>
-    <%= form.number_field :size %>
-  </div>
-
-  <div class="dark:text-teal-900">
+    <%= form.number_field :size, class:  "dark:text-teal-900 w-full" %>
+  
     <%= form.label :water_type, "Water type/salinity", style: "display: block" %>
-    <%= form.select :water_type, ["Freshwater", "Saltwater", "Brackish Water"] %>
-  </div>
-
-  <div class="dark:text-teal-900">
+    <%= form.select :water_type, ["Freshwater", "Saltwater", "Brackish Water"], {}, {:class => "dark:text-teal-900 w-full"} %>
+  
     <%= form.label :filter, "Filter Style", style: "display: block" %>
-    <%= form.select :filter, ["Box (Corner/Internal)", "Canister", "Diatomic", "Fluidized Bed", "Power (Hang-on-Back)", "Sponge", "Under-Gravel", "Wet/Dry (Trickle)", "Other"] %>
-  </div>
-
-  <div class="dark:text-teal-900">
+    <%= form.select :filter, ["Box (Corner/Internal)", "Canister", "Diatomic", "Fluidized Bed", "Power (Hang-on-Back)", "Sponge", "Under-Gravel", "Wet/Dry (Trickle)", "Other"], {}, {:class => "dark:text-teal-900 w-full"} %>
+  
     <%= form.label :plants, "Aquascaping", style: "display: block" %>
-    <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]] %>
-  </div>
+    <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]], {}, {:class => "dark:text-teal-900 w-full"}%>
 
-  <div class="dark:text-teal-900">
     <%= form.label :filter, "Substrate", style: "display: block" %>
-    <%= form.select :filter, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"] %>
-  </div>
+    <%= form.select :filter, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"], {}, {:class => "dark:text-teal-900 w-full"} %>
 
   <%# <div> %>
     <%#= form.label :user_id, style: "display: block" %>
     <%#= form.text_field :user_id %>
   <%# </div> %>
 
-
-  <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-    <%= form.submit %>
+<br>
+  <button type="button" >
+    <%= form.submit class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
   </button>
 <% end %>

@@ -1,13 +1,14 @@
 <h1 class="text-center font-semibold text-3xl underline underline-offset-4 mb-4">Aquarium Fish</h1>
-<div id="fishes" class="columns-2xs">
+
+<div id="fishes" class="flex flex-wrap gap-x-8 gap-y-4">
   <% @fishes.each do |fish| %>
-  <div class="">
+  <div class="w-1/4 mx-auto h-34">
     <div class="card w-full mb-4">
       <div class="card-body">
         <h5 class="font-bold card-title"><%= fish.common_name %></h5>
         <p class="italic card-text"><%= fish.taxonomic_name %></p>
-        <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-          <%= link_to "More info...", fish %>
+        <button type="button" >
+          <%= link_to "More info...", fish, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
         </button>
       </div>
     </div>

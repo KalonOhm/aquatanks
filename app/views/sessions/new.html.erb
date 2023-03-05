@@ -1,17 +1,13 @@
 <h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Welcome back!</h1>
 
-<div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
+<div class="block max-w-sm mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
   <%= form_with do |form| %>
-    <div class="dark:text-teal-900">
     <%= form.label :email, style: "display: block"  %>
-    <%= form.text_field :email, style: "display: block"  %>
-    </div>
-    <div class="dark:text-teal-900">
+    <%= form.text_field :email, class:  "dark:text-teal-900 w-full"  %>
       <%= form.label :password, style: "display: block"  %>
-      <%= form.password_field :password%>
-    </div>
-    <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-      <%= form.submit "Login" %>
+      <%= form.password_field :password, class:  "dark:text-teal-900 w-full"%>
+    <button type="button" >
+      <%= form.submit "Login", {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
     </button>
     
   <% end %>

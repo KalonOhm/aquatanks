@@ -5,11 +5,11 @@
 
 <%#= link_to "Show", aquarium_path(@aquarium)%>
 <% if current_user == @aquarium.user %>
-  <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-    <%= link_to "Edit", edit_aquarium_path(@aquarium) %>
+  <button  type="button" >
+    <%= link_to "Edit", edit_aquarium_path(@aquarium), {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
   </button>
-  <span class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-    <%= button_to "Delete", @aquarium, method: :delete %>
+  <span type="button" >
+    <%= button_to "Delete", @aquarium, method: :delete, class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
   </span>
 
   <%#= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>

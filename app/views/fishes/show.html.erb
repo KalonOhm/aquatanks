@@ -1,9 +1,8 @@
 <h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Fish Facts</h1>
-<br>
-<div class="m-auto block" >
+<div class="" >
   <%= render @fish %>
-  <button class="text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 " type="button" >
-    <%= link_to "Back to Fish List", fishes_path %>
+  <button type="button" >
+    <%= link_to "Back to Fish List", fishes_path, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
   </button>
 </div>
 

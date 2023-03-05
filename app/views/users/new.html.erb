@@ -12,21 +12,18 @@
   </div>
 <% end %>
 
-<div class="block max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
+<div class="block max-w-sm mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700" >
   <%= form_with(model: @user) do |form| %>
-    <div class="dark:text-teal-900">
-      <%= form.label :name, style: "display: block"  %>
-      <%= form.text_field :name %>
-    </div>
-    <div class="dark:text-teal-900">
+      <%= form.label :name, "Username", style: "display: block"  %>
+      <%= form.text_field :name, class:  "dark:text-teal-900 w-full" %>
       <%= form.label :email, style: "display: block"  %>  
-      <%= form.text_field :email %>
-    </div>
-    <div class="dark:text-teal-900">
+      <%= form.text_field :email, class:  "dark:text-teal-900 w-full" %>
       <%= form.label :password, style: "display: block"  %>  
-      <%= form.password_field :password %>
-    </div>
-    <%= form.submit 'Sign Up' %>
+      <%= form.password_field :password, class:  "dark:text-teal-900 w-full" %>
+    <button type="button" >
+      <%= form.submit 'Sign Up', {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
+    </button>
+    
   <% end %>
 </div>
 

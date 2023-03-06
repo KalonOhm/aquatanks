@@ -1,6 +1,6 @@
 <h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%=@user.name%>'s Aquariums</h1>
 
-<div id="aquariums" class="flex flex-wrap gap-x-16 gap-y-8">
+<div id="aquariums" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
 <% @user_aquariums.each do |aquarium|%>
 
   <div class="w-auto mx-auto">

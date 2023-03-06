@@ -2,16 +2,16 @@
 <div class="block max-w-sm mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700 h-96" >
   
 <p class="mt-2 ">Tank Volume:</p>
-<p class="mt-2 text-right"> <%= aquarium.size%> gallons</p>
+<p class="mt-2 text-right text-xl text-teal-400"> <%= aquarium.size%> gallons</p>
 
 <p class="mt-2 ">Water Type/Salinity: </p>
-<p class="mt-2 text-right"> <%= aquarium.water_type%></p>
+<p class="mt-2 text-right text-xl text-teal-400"> <%= aquarium.water_type%></p>
 
 <p class="mt-2 ">Filter Style: </p>
-<p class="mt-2 text-right"><%= aquarium.filter %></p>
+<p class="mt-2 text-right text-xl text-teal-400"><%= aquarium.filter %></p>
 
 <p class="mt-2 ">Aquascaping: </p>
-<p class="mt-2 text-right"><% if aquarium.plants == true %>
+<p class="mt-2 text-right text-xl text-teal-400"><% if aquarium.plants == true %>
   Live Plants
 <% elsif aquarium.plants == false %>
   <span>Artificial or None</span>
@@ -19,5 +19,5 @@
 </p>
 
 <p class="mt-2 ">Substrate: </p>
-<p class="mt-2 text-right"><%= aquarium.substrate %></p>
+<p class="mt-2 text-right text-xl text-teal-400"><%= aquarium.substrate %></p>
 </div>

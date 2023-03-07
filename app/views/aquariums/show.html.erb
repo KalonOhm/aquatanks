@@ -11,23 +11,27 @@
   <span type="button" >
     <%= button_to "Delete", @aquarium, method: :delete, class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
   </span>
+<div class=" text-slate-900 mt-8">
+  <%= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
+      <%# Selectable dropdown list of all 1000+ fish %>
+      <%= select_tag :fish_id, options_for_select(Fish.all.map{ |f| [f.common_name, f.id] }) %> 
 
   <%#= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
-      <%# Selectable dropdown list of all 1000+ fish %>
-      <%#= select_tag :fish_id, options_for_select(Fish.all.map{ |f| [f.common_name, f.id] }) %> 
-
-  <%= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
-    <div class="form-group">
-      <%= label_tag :fish_search, 'Search for a fish' %>
-      <%= text_field_tag :fish_search, '', class: 'form-control', data: { autocomplete_source: ("https://en.wikipedia.org/wiki/List_of_freshwater_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_brackish_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_marine_aquarium_fish_species") } %>
-      </div>
-    <%# not currently breaking things, just not working %>
-
+    <%# <div class="form-group"> %>
+      <%#= label_tag :fish_search, 'Search for a fish' %>
+      <%#= text_field_tag :fish_search, '', class: 'form-control', data: { autocomplete_source: ("https://en.wikipedia.org/wiki/List_of_freshwater_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_brackish_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_marine_aquarium_fish_species") } %>
+      <%# </div> %>
+  
     <%= hidden_field_tag :fish_id %>
-    <%= number_field_tag :count, value: 1, min: 1 %>
-    <%= submit_tag 'Add Fish'%>
+    <%= number_field_tag :count, value: 1, min: 1 %></div>
+    <%= submit_tag 'Add Fish', class:"text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
+    
   <% end %>
 
 
 <% end %>
 
+<div id="fish_in_aquarium" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
+
+</div>
+ 

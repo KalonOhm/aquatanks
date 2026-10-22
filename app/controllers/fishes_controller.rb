@@ -18,7 +18,7 @@ class FishesController < ApplicationController
   end
 
   def search
-    @fishes = Fish.where('common_name ILIKE ? OR taxonomic_name ILIKE ?', "%#{params[:term]}%", "%#{params[:term]}%")
+    @fishes = Fish.where('common_name LIKE ? OR taxonomic_name LIKE ?', "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @fishes.map { |fish| { id: fish.id, text: fish.common_name } }
   end
 

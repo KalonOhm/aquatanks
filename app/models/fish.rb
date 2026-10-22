@@ -1,5 +1,5 @@
 class Fish < ApplicationRecord
-  has_many :aquariums_fishes
+  has_many :aquariums_fishes, class_name: "AquariumFish"
   has_many :aquariums, through: :aquariums_fishes
 
   #validate :image_url_exists

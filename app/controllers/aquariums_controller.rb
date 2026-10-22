@@ -62,8 +62,12 @@ class AquariumsController < ApplicationController
     @aquarium = Aquarium.find(params[:id])
     @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field 
     @count = params[:count].to_i
-    @aquarium.aquariums_fishes.create(fish: @fish, count: @count)
-    redirect_to @aquarium
+    aquarium_fish = @aquarium.aquariums_fishes.create(fish: @fish, count: @count)
+    if aquarium_fish.persisted?
+      redirect_to @aquarium, notice: "Added #{@fish.common_name}."
+    else
+      redirect_to @aquarium, notice: aquarium_fish.errors.full_messages.to_sentence
+    end
   end
 
   private

@@ -22,16 +22,16 @@
       <%#= text_field_tag :fish_search, '', class: 'form-control', data: { autocomplete_source: ("https://en.wikipedia.org/wiki/List_of_freshwater_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_brackish_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_marine_aquarium_fish_species") } %>
       <%# </div> %>
   
-    <%= hidden_field_tag :fish_id %>
-    <%= number_field_tag :count, value: 1, min: 1 %></div>
+    <%= number_field_tag :count, 1, min: 1 %>
     <%= submit_tag 'Add Fish', class:"text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
-    
-  <% end %>
 
+  <% end %>
+</div>
 
 <% end %>
 
 <div id="fish_in_aquarium" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
+  <%= render partial: "aquariums_fishes/aquarium_fish", collection: @aquarium.aquariums_fishes.includes(:fish), as: :aquarium_fish %>
 
 </div>
  

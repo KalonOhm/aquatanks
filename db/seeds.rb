@@ -9,7 +9,6 @@
 # Fish.delete_all
 ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='fishes'")
 
-require 'pry'
 require 'nokogiri'
 require 'open-uri'
 

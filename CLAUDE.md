@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Aquatanks is a Rails 8.1 app where users sign up, create aquariums (tanks), and add fish species to them. The fish catalog (~1000+ species) is scraped from Wikipedia at seed time.
+Aquatanks is a Rails 8.1 app where users sign up, create aquariums (tanks), and add fish species to them. The fish catalog (~1450 species) is scraped from Wikipedia at seed time. Project goals, planned work and the scraper's design are in [DESIGN.md](DESIGN.md); keep it updated when those change.
 
 ## Stack
 
@@ -22,6 +22,8 @@ bin/rails test:system    # browser tests (Selenium)
 ```
 
 Run `bin/dev` (not just `rails s`) so Tailwind classes added in views get compiled into `app/assets/builds/`.
+
+**Windows (PowerShell):** the `bin/` scripts have no extension, so Windows doesn't know to run them with Ruby. Prefix them with `ruby` (e.g. `ruby bin/rails db:seed`). `bin/dev` is a shell script and doesn't work in PowerShell; run `ruby bin/rails server` and `ruby bin/rails tailwindcss:watch` in two terminals instead. Ruby lives in `C:\Ruby40-x64` (RubyInstaller, with its compiler tools already installed).
 
 ## Domain model
 
@@ -46,7 +48,12 @@ Custom inflections in [config/initializers/inflections.rb](config/initializers/i
 
 ## Seeding
 
-[db/seeds.rb](db/seeds.rb) defines `FishScraper`, which uses Nokogiri + open-uri to scrape three Wikipedia lists (freshwater, brackish, marine aquarium fish) and `Fish.create!`s every row. Column positions differ per page, so each scraper method has its own cell indexing. Re-running appends duplicates (`Fish.delete_all` is commented out; only the sqlite id sequence is reset).
+[db/seeds.rb](db/seeds.rb) defines `FishScraper`, which uses Nokogiri + open-uri to scrape three Wikipedia lists (freshwater, brackish, marine aquarium fish), about 1450 fish as of Oct 2026.
+
+- Each page splits fish into many tables (one per family), with different column names and orders (e.g. marine is "Common name, Image, Taxonomy, …, Max size"). Columns are found by matching header text (`FishScraper::COLUMNS`), not by position. If Wikipedia renames a header, update those regexes.
+- Rows whose cell count doesn't match the header are skipped (blank rows, family-name divider rows with a single spanning cell). No table currently uses `rowspan`.
+- Image `src`s are protocol-relative with tracking params; they're normalised to `https:` with the query stripped. Fish without an image keep the `image_url` column default.
+- Re-running is safe: fish are upserted on `common_name` + `taxonomic_name` + `preferred_water`. The same species can appear once per water type (e.g. Guppy is both freshwater and brackish).
 
 ## Styling conventions
 

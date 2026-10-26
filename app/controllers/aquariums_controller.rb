@@ -1,5 +1,7 @@
 class AquariumsController < ApplicationController
+  before_action :require_user, only: %i[ new create ]
   before_action :set_aquarium, only: %i[ show edit update destroy ]
+  
 
   # GET /aquariums or /aquariums.json
   def index

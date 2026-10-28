@@ -15,9 +15,11 @@
 
   <body class="min-h-screen bg-cyan-100 dark:bg-cyan-900 dark:text-cyan-100" >
     <%= render "shared/nav" %>
-
     <div class="container mx-auto px-4 dark:text-cyan-100">
-      <%= yield %>
+    <% flash.each do |type, message| %>
+      <p class="max-w-sm mx-auto my-4 rounded-lg bg-teal-200 p-3 text-navy-500 text-center shadow dark:bg-neutral-700"><%= message %></p>
+    <% end %>
+    <%= yield %>
     </div>
     
   </body>

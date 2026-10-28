@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   resources :fishes
   resources :users, except: [:new]
-  resources :aquariums
   resources :aquariums do 
     member do
       post 'add_fish'
+      delete 'remove_fish'
     end
   end
 

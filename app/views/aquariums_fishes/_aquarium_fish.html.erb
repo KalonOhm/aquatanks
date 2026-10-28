@@ -1,1 +1,10 @@
-<p><%= aquarium_fish.count %> × <%= link_to aquarium_fish.fish.common_name, aquarium_fish.fish %></p>
+<p>
+    <%= aquarium_fish.count %> × <%= link_to aquarium_fish.fish.common_name, aquarium_fish.fish %>
+    <% if current_user == aquarium.user %> 
+        <%= button_to "Remove", remove_fish_aquarium_path(aquarium),
+            method: :delete,
+            params: { aquarium_fish_id: aquarium_fish.id },
+            class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% end %>
+    
+    </p>

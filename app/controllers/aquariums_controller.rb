@@ -1,7 +1,7 @@
 class AquariumsController < ApplicationController
   before_action :require_user, only: %i[ new create ]
-  before_action :set_aquarium, only: %i[ show edit update destroy ]
-  
+  before_action :set_aquarium, only: %i[ show edit update destroy add_fish remove_fish ]
+  before_action :require_owner, only: %i[ edit update destroy add_fish remove_fish ]
 
   # GET /aquariums or /aquariums.json
   def index
@@ -10,7 +10,7 @@ class AquariumsController < ApplicationController
 
   # GET /aquariums/1 or /aquariums/1.json
   def show
-    @aquarium = Aquarium.find(params[:id])
+    # @aquarium = Aquarium.find(params[:id])
   end
 
   # GET /aquariums/new
@@ -61,7 +61,7 @@ class AquariumsController < ApplicationController
   end
 
   def add_fish
-    @aquarium = Aquarium.find(params[:id])
+    # @aquarium = Aquarium.find(params[:id])
     @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field 
     @count = params[:count].to_i
     aquarium_fish = @aquarium.aquariums_fishes.create(fish: @fish, count: @count)
@@ -71,6 +71,13 @@ class AquariumsController < ApplicationController
       redirect_to @aquarium, notice: aquarium_fish.errors.full_messages.to_sentence
     end
   end
+
+  def remove_fish
+    aquarium_fish = @aquarium.aquariums_fishes.find(params[:aquarium_fish_id])
+    aquarium_fish.destroy
+    redirect_to @aquarium, notice: "Removed one #{aquarium_fish.fish.common_name}."  
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -82,5 +89,11 @@ class AquariumsController < ApplicationController
     def aquarium_params
       params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate)
       # removed :user_id from params list
+    end
+
+    def require_owner
+      unless @aquarium.user == helpers.current_user
+        redirect_to @aquarium, alert: "Only this tank's owner can perform this action."
+      end
     end
 end

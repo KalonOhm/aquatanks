@@ -34,7 +34,7 @@ User 1──* Aquarium *──* Fish     (through aquariums_fishes join table, w
 - `User` — `name`, `email`, `password_digest`. Name and email are unique, 4–20 chars.
 - `Aquarium` — `size` (gallons), `water_type`, `filter`, `plants` (boolean: live vs artificial/none), `substrate`, `user_id`. Select options for these live in [app/views/aquariums/_form.html.erb](app/views/aquariums/_form.html.erb).
 - `Fish` — `common_name`, `taxonomic_name`, `image_url` (has a DB default placeholder), `size`, `other_remarks`, `preferred_water` (`freshwater` / `brackish_water` / `saltwater`).
-- `AquariumFish` — join model; validates `count > 0`.
+- `AquariumFish` — join model; validates `count >= 0`. A count of 0 means the fish died out but the entry is kept (shown greyed out) so the owner can restock.
 
 Custom inflections in [config/initializers/inflections.rb](config/initializers/inflections.rb): `fish → fishes`, `aquarium → aquariums`. That's why routes/tables use `fishes` and fixtures are named `fish.yml` / `aquaria.yml` (generated before the inflection was added).
 
@@ -66,7 +66,7 @@ Custom inflections in [config/initializers/inflections.rb](config/initializers/i
 ## Known issues / gotchas
 
 - **Join model naming.** The model is `AquariumFish` but the table is `aquariums_fishes`, so the model sets `self.table_name` and both `has_many :aquariums_fishes` associations pass `class_name: "AquariumFish"`. Keep those if you touch the associations. Its partial lives in `app/views/aquariums_fishes/` and must be rendered with an explicit `partial:` path.
-- The layout doesn't render `flash`, so `notice:` messages from redirects are currently invisible.
+- The layout renders `flash`: `alert:` messages are red, everything else (`notice:`) is teal. Use `alert:` for failures.
 - **`AquariumsFishesController` contains model code** (`belongs_to`/`validates`), which raises if the controller is ever loaded. No routes point at it.
 - `FishesController#destroy` redirects to `fishes` (undefined) — should be `fishes_path`.
 - `resources :aquariums` is declared twice in routes.

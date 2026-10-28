@@ -60,22 +60,41 @@ class AquariumsController < ApplicationController
     end
   end
 
+  # Adds params[:count] fish (the add form), or 1 when no count is sent (the +1 button).
+  # If that fish is already in the tank, its existing entry's count goes up instead of
+  # creating a duplicate entry.
   def add_fish
-    # @aquarium = Aquarium.find(params[:id])
-    @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field 
-    @count = params[:count].to_i
-    aquarium_fish = @aquarium.aquariums_fishes.create(fish: @fish, count: @count)
-    if aquarium_fish.persisted?
-      redirect_to @aquarium, notice: "Added #{@fish.common_name}."
+    @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field
+    count = (params[:count] || 1).to_i
+    if count < 1
+      return redirect_to @aquarium, alert: "You can only add 1 or more fish."
+    end
+
+    aquarium_fish = @aquarium.aquariums_fishes.find_or_initialize_by(fish: @fish)
+    aquarium_fish.count = aquarium_fish.count.to_i + count
+
+    if aquarium_fish.save
+      redirect_to @aquarium, notice: "Added #{count} #{@fish.common_name}."
     else
-      redirect_to @aquarium, notice: aquarium_fish.errors.full_messages.to_sentence
+      redirect_to @aquarium, alert: aquarium_fish.errors.full_messages.to_sentence
     end
   end
 
+  # Removes one fish, or deletes the whole entry when params[:all] is set.
+  # Removing one stops at 0 and keeps the entry, so the tank remembers what to restock.
   def remove_fish
     aquarium_fish = @aquarium.aquariums_fishes.find(params[:aquarium_fish_id])
-    aquarium_fish.destroy
-    redirect_to @aquarium, notice: "Removed one #{aquarium_fish.fish.common_name}."  
+    name = aquarium_fish.fish.common_name
+
+    if params[:all].present?
+      aquarium_fish.destroy
+      redirect_to @aquarium, notice: "Removed #{name} from this tank."
+    elsif aquarium_fish.count > 0
+      aquarium_fish.decrement!(:count)
+      redirect_to @aquarium, notice: "Removed one #{name}."
+    else
+      redirect_to @aquarium, alert: "There are no #{name} left to remove."
+    end
   end
 
 

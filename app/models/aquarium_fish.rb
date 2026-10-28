@@ -4,7 +4,8 @@ class AquariumFish < ApplicationRecord
 
   belongs_to :aquarium
   belongs_to :fish 
-  validates :count, presence: true, numericality: { greater_than: 0 }
+  # 0 is allowed so a tank remembers fish it used to have (shown greyed out for restocking)
+  validates :count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   
 end

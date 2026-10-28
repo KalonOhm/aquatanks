@@ -1,10 +1,28 @@
-<p>
-    <%= aquarium_fish.count %> × <%= link_to aquarium_fish.fish.common_name, aquarium_fish.fish %>
-    <% if current_user == aquarium.user %> 
-        <%= button_to "Remove", remove_fish_aquarium_path(aquarium),
+<div class="flex flex-wrap items-center gap-2">
+    <% if aquarium_fish.count.zero? %>
+        <%# Kept at 0 rather than deleted, so the owner remembers to restock %>
+        <p class="text-gray-500 dark:text-neutral-400">
+            0 × <%= link_to aquarium_fish.fish.common_name, aquarium_fish.fish %>
+            <span class="text-xs italic">(population collapsed)</span>
+        </p>
+    <% else %>
+        <p><%= aquarium_fish.count %> × <%= link_to aquarium_fish.fish.common_name, aquarium_fish.fish %></p>
+    <% end %>
+    <% if current_user == aquarium.user %>
+    <%= button_to "+", add_fish_aquarium_path(aquarium),
+            method: :post,
+            params: { fish_id: aquarium_fish.fish_id },
+            class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% if aquarium_fish.count > 0 %>
+    <%= button_to "-", remove_fish_aquarium_path(aquarium),
             method: :delete,
             params: { aquarium_fish_id: aquarium_fish.id },
             class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
     <% end %>
-    
-    </p>
+        <%= button_to "Remove all", remove_fish_aquarium_path(aquarium),
+            method: :delete,
+            params: { aquarium_fish_id: aquarium_fish.id, all: true },
+            form: { data: { turbo_confirm: "Remove #{aquarium_fish.fish.common_name} from this tank's list entirely?" } },
+            class: "text-xs inline-block rounded bg-red-700 dark:bg-red-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% end %>
+</div>

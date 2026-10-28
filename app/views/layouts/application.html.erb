@@ -17,7 +17,11 @@
     <%= render "shared/nav" %>
     <div class="container mx-auto px-4 dark:text-cyan-100">
     <% flash.each do |type, message| %>
-      <p class="max-w-sm mx-auto my-4 rounded-lg bg-teal-200 p-3 text-navy-500 text-center shadow dark:bg-neutral-700"><%= message %></p>
+      <% if type == "alert" %>
+        <p class="max-w-sm mx-auto my-4 rounded-lg bg-red-200 p-3 text-red-900 text-center shadow dark:bg-red-900 dark:text-red-100"><%= message %></p>
+      <% else %>
+        <p class="max-w-sm mx-auto my-4 rounded-lg bg-teal-200 p-3 text-navy-500 text-center shadow dark:bg-neutral-700"><%= message %></p>
+      <% end %>
     <% end %>
     <%= yield %>
     </div>

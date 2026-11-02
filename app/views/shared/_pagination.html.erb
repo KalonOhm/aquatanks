@@ -1,0 +1,41 @@
+<%# Page links and a per-page picker for whatever list Pagination#paginate set @page for.
+    Links keep the rest of the query string (search, filters). %>
+<% link_class = "px-2 py-1 rounded hover:bg-teal-200 dark:hover:bg-teal-800" %>
+<nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 my-4 text-sm" aria-label="Pages">
+  <span class="text-gray-500 dark:text-neutral-400">
+    <% if page.total_count.zero? %>
+      Nothing found
+    <% else %>
+      Showing <%= page.first_item %>–<%= page.last_item %> of <%= page.total_count %>
+    <% end %>
+  </span>
+
+  <% if page.total_pages > 1 %>
+    <span class="flex items-center gap-1">
+      <% unless page.first? %>
+        <%= link_to "‹ Prev", url_for(request.query_parameters.merge(page: page.number - 1)), class: link_class, rel: "prev" %>
+      <% end %>
+      <% page.window.each do |n| %>
+        <% if n.nil? %>
+          <span class="px-1">…</span>
+        <% elsif n == page.number %>
+          <span class="px-2 py-1 rounded bg-teal-700 text-white dark:bg-teal-500" aria-current="page"><%= n %></span>
+        <% else %>
+          <%= link_to n, url_for(request.query_parameters.merge(page: n)), class: link_class %>
+        <% end %>
+      <% end %>
+      <% unless page.last? %>
+        <%= link_to "Next ›", url_for(request.query_parameters.merge(page: page.number + 1)), class: link_class, rel: "next" %>
+      <% end %>
+    </span>
+  <% end %>
+
+  <%= form_with url: request.path, method: :get, class: "flex items-center gap-1" do |form| %>
+    <% request.query_parameters.except("page", "per_page").each do |key, value| %>
+      <%= hidden_field_tag key, value %>
+    <% end %>
+    <%= form.label :per_page, "Per page", class: "text-gray-500 dark:text-neutral-400" %>
+    <%= form.select :per_page, User::PER_PAGE_OPTIONS, { selected: page.per_page }, class: "rounded py-0.5 text-sm text-slate-900", onchange: "this.form.requestSubmit()" %>
+    <noscript><%= form.submit "Go", name: nil %></noscript>
+  <% end %>
+</nav>

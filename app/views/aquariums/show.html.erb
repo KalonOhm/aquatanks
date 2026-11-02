@@ -11,27 +11,38 @@
   <span type="button" >
     <%= button_to "Delete", @aquarium, method: :delete, class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
   </span>
-<div class=" text-slate-900 mt-8">
-  <%= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
-      <%# Selectable dropdown list of all 1000+ fish %>
-      <%= select_tag :fish_id, options_for_select(Fish.all.map{ |f| [f.common_name, f.id] }) %> 
-
-  <%#= form_tag(add_fish_aquarium_path(@aquarium), method: :post) do %>
-    <%# <div class="form-group"> %>
-      <%#= label_tag :fish_search, 'Search for a fish' %>
-      <%#= text_field_tag :fish_search, '', class: 'form-control', data: { autocomplete_source: ("https://en.wikipedia.org/wiki/List_of_freshwater_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_brackish_aquarium_fish_species" && "https://en.wikipedia.org/wiki/List_of_marine_aquarium_fish_species") } %>
-      <%# </div> %>
-  
-    <%= number_field_tag :count, 1, min: 1 %>
-    <%= submit_tag 'Add Fish', class:"text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  " %>
-
+<%# Search-as-you-type: app/javascript/controllers/species_search_controller.js %>
+<div class="mt-8 max-w-xl"
+     data-controller="species-search"
+     data-species-search-url-value="<%= search_species_path %>"
+     data-species-search-water-value="<%= @aquarium.species_water %>"
+     data-species-search-strict-value="<%= preferences.strict_add_search %>"
+     data-action="click@window->species-search#close">
+  <%= form_tag(add_species_aquarium_path(@aquarium), method: :post, class: "flex flex-wrap items-end gap-2") do %>
+    <div class="relative flex-1 min-w-[16rem]">
+      <%= label_tag :species_search, "Add a species", class: "block text-sm" %>
+      <%= text_field_tag :species_search, nil,
+            placeholder: "Search any name, e.g. neon tetra",
+            autocomplete: "off",
+            class: "w-full rounded text-slate-900",
+            data: { species_search_target: "input", action: "input->species-search#search keydown->species-search#keydown" } %>
+      <%= hidden_field_tag :species_id, nil, data: { species_search_target: "speciesId" } %>
+      <div hidden
+           class="absolute z-20 mt-1 w-full max-h-72 overflow-y-auto rounded bg-white text-slate-900 shadow-lg dark:bg-neutral-700 dark:text-cyan-100"
+           data-species-search-target="results"></div>
+    </div>
+    <%= number_field_tag :count, 1, min: 1, class: "w-20 rounded text-slate-900", aria: { label: "How many" } %>
+    <%= submit_tag 'Add to Tank', disabled: true,
+          class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end disabled:opacity-50",
+          data: { species_search_target: "submit" } %>
   <% end %>
 </div>
 
 <% end %>
 
-<div id="fish_in_aquarium" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
-  <%= render partial: "aquariums_fishes/aquarium_fish", collection: @aquarium.aquariums_fishes.includes(:fish), as: :aquarium_fish, locals: { aquarium: @aquarium }%>
-
-</div>
- 
+<% @stock_by_category.each do |category, entries| %>
+  <h2 class="text-xl font-medium mt-8 mb-2 ml-10"><%= SpeciesHelper::CATEGORY_HEADINGS[category] %></h2>
+  <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
+    <%= render entries, aquarium: @aquarium %>
+  </div>
+<% end %>

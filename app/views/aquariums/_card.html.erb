@@ -1,0 +1,15 @@
+<%# One tank in a list (All Tanks, a user's tanks) %>
+<div class="w-auto mx-auto">
+  <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="Aquarium image">
+  <p class="text-xl">
+    <%= tank_volume(aquarium) %>
+    <% unless aquarium.public? %>
+      <span class="ml-1 align-middle rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-700 dark:bg-neutral-600 dark:text-neutral-200">Private</span>
+    <% end %>
+  </p>
+  <p class="text-lg"><%= aquarium.water_type %> aquarium</p>
+  <p class="text-sm">Owner: <%= link_to aquarium.user.name, user_path(aquarium.user) %></p>
+  <button type="button" >
+    <%= link_to "See Details", aquarium, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
+  </button>
+</div>

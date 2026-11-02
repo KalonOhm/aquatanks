@@ -1,0 +1,23 @@
+<%# Every field but the name is optional, so each line only shows when there's something to show %>
+<div class="mb-4">
+  <div class=" ">
+    <h2 class="font-bold <%= 'italic' if scientific_first?(species) %>">
+      <%= species_name(species) %>
+    </h2>
+    <% if (other_name = species_other_name(species)) %>
+      <p class="<%= 'italic' unless scientific_first?(species) %>"><%= other_name %></p>
+    <% end %>
+    <% if species.aliases.any? %>
+      <p class="text-sm">Also known as: <%= species.alias_names.join(", ") %></p>
+    <% end %>
+    <p class="text-sm text-gray-500 dark:text-neutral-400"><%= species_kind(species) %></p>
+    <%= species_image_tag species, class: "rounded-lg my-2" %>
+    <% if species.size.present? %>
+      <p class=" ">Size: <%= species_size(species) %></p>
+    <% end %>
+    <% if species.other_remarks.present? %>
+      <p class=" "><%= species.other_remarks %></p>
+    <% end %>
+  </div>
+</div>
+

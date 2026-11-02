@@ -17,5 +17,7 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'aquarium', 'aquariums'
-  inflect.irregular 'fish', 'fishes'
+  # "species" is already uncountable, but Rails only spots that for the whole word,
+  # so without this "aquarium_species" would singularize to "aquarium_specy"
+  inflect.singular(/(species)\z/i, '\1')
 end

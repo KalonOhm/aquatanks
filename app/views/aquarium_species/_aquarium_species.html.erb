@@ -1,0 +1,28 @@
+<div class="flex flex-wrap items-center gap-2">
+    <% if aquarium_species.count.zero? %>
+        <%# Kept at 0 rather than deleted, so the owner remembers to restock %>
+        <p class="text-gray-500 dark:text-neutral-400">
+            0 × <%= link_to species_name(aquarium_species.species), aquarium_species.species %>
+            <span class="text-xs italic">(<%= aquarium_species.species.category == "plant" ? "none left" : "population collapsed" %>)</span>
+        </p>
+    <% else %>
+        <p><%= aquarium_species.count %> × <%= link_to species_name(aquarium_species.species), aquarium_species.species %></p>
+    <% end %>
+    <% if current_user == aquarium.user %>
+    <%= button_to "+", add_species_aquarium_path(aquarium),
+            method: :post,
+            params: { species_id: aquarium_species.species_id },
+            class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% if aquarium_species.count > 0 %>
+    <%= button_to "-", remove_species_aquarium_path(aquarium),
+            method: :delete,
+            params: { aquarium_species_id: aquarium_species.id },
+            class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% end %>
+        <%= button_to "Remove all", remove_species_aquarium_path(aquarium),
+            method: :delete,
+            params: { aquarium_species_id: aquarium_species.id, all: true },
+            form: { data: { turbo_confirm: "Remove #{aquarium_species.species.common_name} from this tank's list entirely?" } },
+            class: "text-xs inline-block rounded bg-red-700 dark:bg-red-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    <% end %>
+</div>

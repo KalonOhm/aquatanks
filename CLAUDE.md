@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Aquatanks is a Rails 8.1 app where users sign up, create aquariums (tanks), and add fish species to them. The fish catalog (~1450 species) is scraped from Wikipedia at seed time. Project goals, planned work and the scraper's design are in [DESIGN.md](DESIGN.md); keep it updated when those change.
+Aquatanks is a Rails 8.1 app where users sign up, create aquariums (tanks), and stock them with species. The species catalog (~2200 fish, invertebrates, plants and amphibians) is scraped from Wikipedia at seed time. Project goals, planned work and the scraper's design are in [DESIGN.md](DESIGN.md); keep it updated when those change.
 
 ## Stack
 
@@ -28,32 +28,44 @@ Run `bin/dev` (not just `rails s`) so Tailwind classes added in views get compil
 ## Domain model
 
 ```
-User 1──* Aquarium *──* Fish     (through aquariums_fishes join table, with a `count` column)
+User 1──* Aquarium *──* Species 1──* SpeciesAlias
+            (through aquarium_species, with a `count` column)
 ```
 
-- `User` — `name`, `email`, `password_digest`. Name and email are unique, 4–20 chars.
-- `Aquarium` — `size` (gallons), `water_type`, `filter`, `plants` (boolean: live vs artificial/none), `substrate`, `user_id`. Select options for these live in [app/views/aquariums/_form.html.erb](app/views/aquariums/_form.html.erb).
-- `Fish` — `common_name`, `taxonomic_name`, `image_url` (has a DB default placeholder), `size`, `other_remarks`, `preferred_water` (`freshwater` / `brackish_water` / `saltwater`).
-- `AquariumFish` — join model; validates `count >= 0`. A count of 0 means the fish died out but the entry is kept (shown greyed out) so the owner can restock.
+- `User` — `name`, `email`, `password_digest`. Name and email are unique, 4–20 chars. Preferences (edited on the profile page, `users#edit`): `per_page` (`User::PER_PAGE_OPTIONS`), `units` (`us` / `metric`), `theme` (`system` / `light` / `dark`), `default_water` (nil = any), `scientific_names_first`, `strict_add_search`, `default_tank_public`.
+- `Aquarium` — `size` (decimal, always US gallons; shown and entered in the user's units via `Units` / `UnitsHelper`), `water_type` (keys of `Aquarium::WATER_TYPES`, which maps them to species water values), `filter`, `plants` (boolean: live vs artificial/none), `substrate`, `public` (others can see it), `user_id`. Other select options live in [app/views/aquariums/_form.html.erb](app/views/aquariums/_form.html.erb). `Aquarium.visible_to(user)` = public tanks plus that user's own.
+- `Species` — `common_name`, `taxonomic_name`, `category` (`fish` / `invertebrate` / `plant` / `amphibian`), `image_url`, `size`, `other_remarks`, `preferred_water` (`freshwater` / `brackish_water` / `saltwater`). Only a name (common or scientific) is required; views show only the fields that are filled in. `Species.search(term)` requires every word of the term to appear (as a substring, any order) in the common name, scientific name or an alias, so "cory panda" finds "Panda corydoras". Was `Fish` until Nov 2026.
+- `SpeciesAlias` — extra common names for a species (`name`), e.g. "skirt tetra" for Black tetra. Edited on the species form as comma-separated `alias_list`.
+- `AquariumSpecies` — join model (table `aquarium_species`); validates `count >= 0`. A count of 0 means the species died out but the entry is kept (shown greyed out) so the owner can restock.
 
-Custom inflections in [config/initializers/inflections.rb](config/initializers/inflections.rb): `fish → fishes`, `aquarium → aquariums`. That's why routes/tables use `fishes` and fixtures are named `fish.yml` / `aquaria.yml` (generated before the inflection was added).
+Deletes cascade through the models: User → its aquariums → their `aquarium_species`, and Species → its `aquarium_species` and aliases (all `dependent: :destroy`). Foreign keys on `aquarium_species` and `aquariums.user_id` back this up in the database, so a raw SQL delete of a referenced row fails instead of leaving orphans.
+
+"species" is uncountable, so `resources :species` gives `species_index_path` for the list page and `species_path(s)` for one species. [config/initializers/inflections.rb](config/initializers/inflections.rb) also has a rule so `aquarium_species` singularizes correctly (Rails would otherwise make it `aquarium_specy`), plus `aquarium → aquariums` (why the aquarium fixture file is `aquaria.yml`).
+
+Species pictures go through `species_image_tag` ([app/helpers/species_helper.rb](app/helpers/species_helper.rb)): a blank `image_url`, or one that fails to load, shows the local `fishbowl-clipart-acquarium-15.png`. The broken-image swap is an inline `onerror`, which would need allowing if a Content Security Policy is turned on.
 
 ## Request flow
 
-- Routes: [config/routes.rb](config/routes.rb). Root is `pages#home`. Auth routes: `GET/POST /login`, `DELETE /logout`, `GET /sign-up`. Extra: `POST /aquariums/:id/add_fish`, `GET /search_fishes`.
+- Routes: [config/routes.rb](config/routes.rb). Root is `pages#home`. Auth routes: `GET/POST /login`, `DELETE /logout`, `GET /sign-up`. Extra: `POST /aquariums/:id/add_species` (form sends `species_id` + `count`; the "+" button sends no count, meaning 1), `DELETE /aquariums/:id/remove_species` (`aquarium_species_id`, plus `all` to delete the entry), `GET /search_species?term=&water=&strict=` (JSON for the tank page's search-as-you-type: `id`, `text` (main name), `other_name`, `kind`, `suits_water`; needs 2+ characters; tank's water first, or only with `strict`). The catalog index takes `q`, `category` and `water` filters; no `water` param means the user's `default_water`, a blank one means "Any".
+- **Preferences:** read them through `preferences` (ApplicationHelper, `helpers.preferences` in controllers). It's `current_user`, or `User.new` for guests, so the column defaults are the guest settings and nothing needs a nil check. Name display goes through `species_name` / `species_other_name` / `scientific_first?` ([species_helper.rb](app/helpers/species_helper.rb)), sizes through `species_size` and volumes through `tank_volume` ([units_helper.rb](app/helpers/units_helper.rb)).
+- **Paging:** `paginate(scope)` from the `Pagination` concern (included in `ApplicationController`) returns one page and sets `@page`; render `shared/pagination` with `page: @page`. Links keep the rest of the query string. Used on the catalog, All Tanks and a user's tanks.
+- **Privacy:** `AquariumsController#require_visible` redirects anyone but the owner away from a private tank; lists use `Aquarium.visible_to`.
+- **Theme:** Tailwind uses `darkMode: 'class'`. The layout puts the theme in `<meta name="aquatanks-theme">`, and an inline head script sets `dark` on `<html>` from it on load and after every `turbo:render` (Turbo keeps `<html>`). Don't switch to a `data-turbo-track="reload"` approach: the extra reload eats flash messages.
+- The tank page's add box is a Stimulus controller, [species_search_controller.js](app/javascript/controllers/species_search_controller.js); it builds result rows with `textContent`, so keep it that way rather than `innerHTML`. `AquariumsController#show` builds `@stock_by_category` for the grouped stocked list.
 - `current_user` / `logged_in?` live in `ApplicationHelper` (session `:user_id`); controllers reach them via `helpers.current_user`.
-- `ApplicationController` defines `require_user` (redirect guests to login) and `is_signed_in?` (redirect logged-in users away from login/sign-up). `require_user` is not currently applied anywhere.
+- `ApplicationController` defines `require_user` (redirect guests to login) and `is_signed_in?` (redirect logged-in users away from login/sign-up). `AquariumsController` uses `require_user` for new/create and its own `require_owner` for edit/update/destroy/add_species/remove_species.
 - Nav (desktop + mobile hamburger) is [app/views/shared/_nav.html.erb](app/views/shared/_nav.html.erb); the hamburger toggle is vanilla JS in [app/javascript/application.js](app/javascript/application.js) (bound on `DOMContentLoaded`, not a Stimulus controller).
-- "My Tanks" is `users#show`, which lists that user's aquariums.
+- "My Tanks" is `users#show`, which lists that user's aquariums (only the public ones to other people). "Profile" is `users#edit`: you can only edit yourself, and changing email or password needs the current password.
 
 ## Seeding
 
-[db/seeds.rb](db/seeds.rb) defines `FishScraper`, which uses Nokogiri + open-uri to scrape three Wikipedia lists (freshwater, brackish, marine aquarium fish), about 1450 fish as of Oct 2026.
+[db/seeds.rb](db/seeds.rb) defines `SpeciesScraper`, which uses Nokogiri + open-uri to scrape eight Wikipedia lists (`SpeciesScraper::PAGES`, each tagged with a water type and category): about 2200 species as of Nov 2026. Details are in [DESIGN.md](DESIGN.md#the-species-scraper).
 
-- Each page splits fish into many tables (one per family), with different column names and orders (e.g. marine is "Common name, Image, Taxonomy, …, Max size"). Columns are found by matching header text (`FishScraper::COLUMNS`), not by position. If Wikipedia renames a header, update those regexes.
-- Rows whose cell count doesn't match the header are skipped (blank rows, family-name divider rows with a single spanning cell). No table currently uses `rowspan`.
-- Image `src`s are protocol-relative with tracking params; they're normalised to `https:` with the query stripped. Fish without an image keep the `image_url` column default.
-- Re-running is safe: fish are upserted on `common_name` + `taxonomic_name` + `preferred_water`. The same species can appear once per water type (e.g. Guppy is both freshwater and brackish).
+- Each page splits species into many tables, with different column names and orders. Columns are found by matching header text (`SpeciesScraper::COLUMNS`), not by position. If Wikipedia renames a header, update those regexes.
+- Tables are expanded into a grid first (`grid`), copying `rowspan`/`colspan` cells into every position they cover. The plant, invertebrate and amphibian pages merge Genus cells down several rows.
+- Common names are split on commas, semicolons and " or " (not inside parentheses, not on `/`): the first is `common_name`, the rest become aliases.
+- Some freshwater plant rows list a whole genus in one cell as a bulleted list; `genus_list` turns each entry into its own species.
+- Re-running is safe: species are upserted on `taxonomic_name` + `preferred_water` + `category` + `common_name`. The same species can appear once per water type (e.g. Guppy is both freshwater and brackish).
 
 ## Styling conventions
 
@@ -65,12 +77,8 @@ Custom inflections in [config/initializers/inflections.rb](config/initializers/i
 
 ## Known issues / gotchas
 
-- **Join model naming.** The model is `AquariumFish` but the table is `aquariums_fishes`, so the model sets `self.table_name` and both `has_many :aquariums_fishes` associations pass `class_name: "AquariumFish"`. Keep those if you touch the associations. Its partial lives in `app/views/aquariums_fishes/` and must be rendered with an explicit `partial:` path.
 - The layout renders `flash`: `alert:` messages are red, everything else (`notice:`) is teal. Use `alert:` for failures.
-- **`AquariumsFishesController` contains model code** (`belongs_to`/`validates`), which raises if the controller is ever loaded. No routes point at it.
-- `FishesController#destroy` redirects to `fishes` (undefined) — should be `fishes_path`.
-- `resources :aquariums` is declared twice in routes.
-- No authorization on aquarium edit/update/destroy: only the view hides buttons for non-owners. Fish CRUD is open to anyone.
+- Species CRUD is open to anyone, signed in or not.
+- The aquarium and user controller tests are broken scaffold stubs (missing `aquariums` fixture, no `new_user_url` route), and so are the old aquarium/user system tests. Working tests: `ruby bin/rails test test/models test/helpers test/controllers/species_controller_test.rb test/integration`, then separately `ruby bin/rails test test/system/species_search_test.rb test/system/theme_test.rb` (Chrome). Mixing the two kinds in one command fails. Integration tests sign in with `sign_in_new_user(**preferences)` from test_helper (the users.yml fixtures have no usable password; emails are capped at 20 characters). In system tests click the login *button*: the nav also has a "Login" link.
 - Aquarium index's "Owner" link points at `@user` (nil) instead of `aquarium.user`.
 - Views pull some images from external clipart URLs.
-- `association_map.drawio` at the repo root is a diagram of the model associations.

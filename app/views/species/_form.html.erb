@@ -1,10 +1,10 @@
-<%= form_with(model: fish) do |form| %>
-  <% if fish.errors.any? %>
+<%= form_with(model: species) do |form| %>
+  <% if species.errors.any? %>
     <div class="text-orange-400">
-      <h2><%= pluralize(fish.errors.count, "error") %> prohibited this fish from being saved:</h2>
+      <h2><%= pluralize(species.errors.count, "error") %> prohibited this species from being saved:</h2>
 
       <ul>
-        <% fish.errors.each do |error| %>
+        <% species.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
@@ -17,8 +17,23 @@
   </div>
 
   <div class="dark:text-teal-900">
-    <%= form.label :taxonomic_name, style: "display: block" %>
+    <%= form.label :alias_list, "Other common names (comma separated)", style: "display: block" %>
+    <%= form.text_field :alias_list %>
+  </div>
+
+  <div class="dark:text-teal-900">
+    <%= form.label :taxonomic_name, "Scientific name", style: "display: block" %>
     <%= form.text_field :taxonomic_name %>
+  </div>
+
+  <div class="dark:text-teal-900">
+    <%= form.label :category, style: "display: block" %>
+    <%= form.select :category, Species::CATEGORIES.map { |c| [c.capitalize, c] } %>
+  </div>
+
+  <div class="dark:text-teal-900">
+    <%= form.label :preferred_water, style: "display: block" %>
+    <%= form.select :preferred_water, Species::WATER_TYPES.map { |w| [w.humanize, w] }, include_blank: true %>
   </div>
 
   <div class="dark:text-teal-900">

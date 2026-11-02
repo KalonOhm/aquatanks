@@ -1,6 +1,9 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
+  // dark: classes follow a "dark" class on <html>, set from the user's theme
+  // preference (the layout adds it, or a script does for "follow my device")
+  darkMode: 'class',
   content: [
     './public/*.html',
     './app/helpers/**/*.rb',

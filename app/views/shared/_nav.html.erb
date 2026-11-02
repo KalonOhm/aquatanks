@@ -11,10 +11,11 @@
         ></div>
       </button>
       <nav class="hidden space-x-8 text-lg md:block" aria-label="main">
-        <span class="hover:opacity-90"><%= link_to 'View Fish', fishes_path %></span>
+        <span class="hover:opacity-90"><%= link_to 'View Species', species_index_path %></span>
         <% if logged_in? %>
           <span class="hover:opacity-90"><%= link_to 'AquaTanks', aquariums_path %></span>
           <span class="hover:opacity-90"><%= link_to 'My Tanks', user_path(current_user) %></span>
+          <span class="hover:opacity-90"><%= link_to 'Profile', edit_user_path(current_user) %></span>
           <span class="hover:opacity-90"><%= link_to 'Logout', logout_path, data:{"turbo-method": :delete} %></span>
         <% else %>
           <span class="hover:opacity-90"><%= link_to 'Login', login_path %></span>
@@ -27,10 +28,11 @@
         class="top-68 justify-content-center absolute hidden w-full origin-top animate-open-menu flex-col bg-black text-5xl"
   >
     <nav class="flex min-h-screen flex-col items-center py-8" aria-label="mobile">
-      <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'View Fish', fishes_path %></p>
+      <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'View Species', species_index_path %></p>
       <% if logged_in? %>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'AquaTanks', aquariums_path %></p>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'My Tanks', user_path(current_user) %></p>
+        <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'Profile', edit_user_path(current_user) %></p>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'Logout', logout_path, data:{"turbo-method": :delete} %></p>
       <% else %>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'Login', login_path %></p>

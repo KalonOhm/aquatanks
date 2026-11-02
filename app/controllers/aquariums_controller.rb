@@ -1,21 +1,31 @@
 class AquariumsController < ApplicationController
   before_action :require_user, only: %i[ new create ]
-  before_action :set_aquarium, only: %i[ show edit update destroy add_fish remove_fish ]
-  before_action :require_owner, only: %i[ edit update destroy add_fish remove_fish ]
+  before_action :set_aquarium, only: %i[ show edit update destroy add_species remove_species ]
+  before_action :require_visible, only: %i[ show edit update destroy add_species remove_species ]
+  before_action :require_owner, only: %i[ edit update destroy add_species remove_species ]
 
   # GET /aquariums or /aquariums.json
+  # Public tanks, plus the viewer's own private ones
   def index
-    @aquariums = Aquarium.all
+    @aquariums = paginate(Aquarium.visible_to(helpers.current_user).includes(:user).order(created_at: :desc))
   end
 
   # GET /aquariums/1 or /aquariums/1.json
   def show
-    # @aquarium = Aquarium.find(params[:id])
+    # [[category, [stocked entries sorted by name]], ...] in Species::CATEGORIES order
+    @stock_by_category = @aquarium.aquarium_species.includes(:species)
+      .sort_by { |entry| helpers.species_name(entry.species).downcase }
+      .group_by { |entry| entry.species.category }
+      .sort_by { |category, _| Species::CATEGORIES.index(category) }
   end
 
   # GET /aquariums/new
+  # Starts from the user's preferences: default water type and privacy
   def new
-    @aquarium = Aquarium.new
+    @aquarium = Aquarium.new(
+      water_type: Aquarium::WATER_TYPES.key(helpers.preferences.default_water),
+      public: helpers.preferences.default_tank_public,
+    )
   end
 
   # GET /aquariums/1/edit
@@ -60,37 +70,37 @@ class AquariumsController < ApplicationController
     end
   end
 
-  # Adds params[:count] fish (the add form), or 1 when no count is sent (the +1 button).
-  # If that fish is already in the tank, its existing entry's count goes up instead of
+  # Adds params[:count] of a species (the add form), or 1 when no count is sent (the + button).
+  # If that species is already in the tank, its existing entry's count goes up instead of
   # creating a duplicate entry.
-  def add_fish
-    @fish = Fish.find(params[:fish_id]) #TODO: figure out how to search fishes field
+  def add_species
+    @species = Species.find(params[:species_id]) #TODO: figure out how to search species field
     count = (params[:count] || 1).to_i
     if count < 1
-      return redirect_to @aquarium, alert: "You can only add 1 or more fish."
+      return redirect_to @aquarium, alert: "You can only add 1 or more."
     end
 
-    aquarium_fish = @aquarium.aquariums_fishes.find_or_initialize_by(fish: @fish)
-    aquarium_fish.count = aquarium_fish.count.to_i + count
+    aquarium_species = @aquarium.aquarium_species.find_or_initialize_by(species: @species)
+    aquarium_species.count = aquarium_species.count.to_i + count
 
-    if aquarium_fish.save
-      redirect_to @aquarium, notice: "Added #{count} #{@fish.common_name}."
+    if aquarium_species.save
+      redirect_to @aquarium, notice: "Added #{count} #{@species.common_name}."
     else
-      redirect_to @aquarium, alert: aquarium_fish.errors.full_messages.to_sentence
+      redirect_to @aquarium, alert: aquarium_species.errors.full_messages.to_sentence
     end
   end
 
-  # Removes one fish, or deletes the whole entry when params[:all] is set.
+  # Removes one, or deletes the whole entry when params[:all] is set.
   # Removing one stops at 0 and keeps the entry, so the tank remembers what to restock.
-  def remove_fish
-    aquarium_fish = @aquarium.aquariums_fishes.find(params[:aquarium_fish_id])
-    name = aquarium_fish.fish.common_name
+  def remove_species
+    aquarium_species = @aquarium.aquarium_species.find(params[:aquarium_species_id])
+    name = aquarium_species.species.common_name
 
     if params[:all].present?
-      aquarium_fish.destroy
+      aquarium_species.destroy
       redirect_to @aquarium, notice: "Removed #{name} from this tank."
-    elsif aquarium_fish.count > 0
-      aquarium_fish.decrement!(:count)
+    elsif aquarium_species.count > 0
+      aquarium_species.decrement!(:count)
       redirect_to @aquarium, notice: "Removed one #{name}."
     else
       redirect_to @aquarium, alert: "There are no #{name} left to remove."
@@ -105,9 +115,17 @@ class AquariumsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
+    # The form takes the volume in the user's units; it's stored in gallons.
     def aquarium_params
-      params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate)
-      # removed :user_id from params list
+      permitted = params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate, :public)
+      permitted[:size] = Units.to_gallons(permitted[:size], helpers.preferences.units) if permitted.key?(:size)
+      permitted
+    end
+
+    def require_visible
+      unless @aquarium.visible_to?(helpers.current_user)
+        redirect_to aquariums_path, alert: "That tank is private."
+      end
     end
 
     def require_owner

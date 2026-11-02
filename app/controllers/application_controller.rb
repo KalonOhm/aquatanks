@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pagination
+
   def require_user
     #if user is only guest tries to access resticted page, redirect to login page
     if guest?

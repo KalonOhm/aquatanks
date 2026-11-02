@@ -11,26 +11,27 @@
     </div>
   <% end %>
 
-  
-    <%= form.label :size, "Tank Volume (gallons)", style: "display: block" %>
-    <%= form.number_field :size, class:  "dark:text-teal-900 w-full" %>
-  
+
+    <%# Stored in gallons; shown and entered in the user's units (see aquarium_params) %>
+    <%= form.label :size, "Tank Volume (#{volume_unit_name})", style: "display: block" %>
+    <%= form.number_field :size, value: aquarium.size && Units.from_gallons(aquarium.size, preferences.units).round(1), step: "any", class: "dark:text-teal-900 w-full" %>
+
     <%= form.label :water_type, "Water type/salinity", style: "display: block" %>
-    <%= form.select :water_type, ["Freshwater", "Saltwater", "Brackish Water"], {}, {:class => "dark:text-teal-900 w-full"} %>
-  
+    <%= form.select :water_type, Aquarium::WATER_TYPES.keys, {}, {:class => "dark:text-teal-900 w-full"} %>
+
     <%= form.label :filter, "Filter Style", style: "display: block" %>
     <%= form.select :filter, ["Box (Corner/Internal)", "Canister", "Diatomic", "Fluidized Bed", "Power (Hang-on-Back)", "Sponge", "Under-Gravel", "Wet/Dry (Trickle)", "Other"], {}, {:class => "dark:text-teal-900 w-full"} %>
-  
+
     <%= form.label :plants, "Aquascaping", style: "display: block" %>
     <%= form.select :plants, [["Live plants", true], ["Artificial or none", false]], {}, {:class => "dark:text-teal-900 w-full"}%>
 
     <%= form.label :substrate, "Substrate", style: "display: block" %>
     <%= form.select :substrate, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"], {}, {:class => "dark:text-teal-900 w-full"} %>
 
-  <%# <div> %>
-    <%#= form.label :user_id, style: "display: block" %>
-    <%#= form.text_field :user_id %>
-  <%# </div> %>
+    <div class="mt-2">
+      <%= form.check_box :public %>
+      <%= form.label :public, "Visible to other users" %>
+    </div>
 
 <br>
   <button type="button" >

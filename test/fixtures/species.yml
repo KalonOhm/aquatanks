@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  common_name: Black tetra
+  taxonomic_name: Gymnocorymbus ternetzi
+  category: fish
+  preferred_water: freshwater
+  image_url: https://upload.wikimedia.org/example.jpg
+  size: 5.5 cm (2.2 in)
+  other_remarks: MyString
+
+two:
+  common_name: Java fern
+  taxonomic_name: Leptochilus pteropus
+  category: plant
+  preferred_water: freshwater
+
+three:
+  common_name: Black urchin
+  taxonomic_name: Diadema setosum
+  category: invertebrate
+  preferred_water: saltwater

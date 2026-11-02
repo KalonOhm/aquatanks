@@ -1,0 +1,45 @@
+<h1 class="text-center font-semibold text-3xl underline underline-offset-4 mb-4">Aquarium Species</h1>
+
+<%= form_with url: species_index_path, method: :get, class: "flex flex-wrap items-end justify-center gap-2 mb-2" do |form| %>
+  <div>
+    <%= form.label :q, "Search", class: "block text-sm" %>
+    <%= form.search_field :q, value: params[:q], placeholder: "Any name, e.g. amazon sword", class: "rounded text-slate-900" %>
+  </div>
+  <div>
+    <%= form.label :category, class: "block text-sm" %>
+    <%= form.select :category, SpeciesHelper::CATEGORY_HEADINGS.invert, { include_blank: "All", selected: params[:category] }, class: "rounded text-slate-900" %>
+  </div>
+  <div>
+    <%= form.label :water, class: "block text-sm" %>
+    <%# @water is the default water from the profile when the URL doesn't say %>
+    <%= form.select :water, Species::WATER_TYPES.map { |w| [w.humanize, w] }, { include_blank: "Any", selected: @water }, class: "rounded text-slate-900" %>
+  </div>
+  <%= hidden_field_tag :per_page, params[:per_page] if params[:per_page].present? %>
+  <%= form.submit "Search", name: nil, class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+  <% if params.values_at(:q, :category, :water).any?(&:present?) %>
+    <%= link_to "Clear", species_index_path, class: "text-sm underline self-end pb-1.5" %>
+  <% end %>
+<% end %>
+
+<%= render "shared/pagination", page: @page %>
+
+<div id="species" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-20">
+  <% @species_list.each do |species| %>
+  <div class="justify-start">
+    <div class="w-full mb-4">
+      <div class="h-32">
+        <h5 class="font-bold <%= 'italic' if scientific_first?(species) %>"><%= species_name(species) %></h5>
+        <% if (other_name = species_other_name(species)) %>
+          <p class="<%= 'italic' unless scientific_first?(species) %>"><%= other_name %></p>
+        <% end %>
+        <p class="text-sm text-gray-500 dark:text-neutral-400"><%= species_kind(species) %></p>
+        <button type="button" >
+          <%= link_to "More info...", species, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
+        </button>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+<%= render "shared/pagination", page: @page if @page.total_pages > 1 %>

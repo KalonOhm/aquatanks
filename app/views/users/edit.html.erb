@@ -1,0 +1,67 @@
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Profile</h1>
+
+<% if @user.errors.any? %>
+  <div class="text-orange-400 max-w-sm mx-auto mb-4">
+    <h2><%= pluralize(@user.errors.count, "error") %> prohibited your profile from being saved:</h2>
+    <ul>
+      <% @user.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with(model: @user) do |form| %>
+  <div class="block max-w-sm mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700 mb-6">
+    <h2 class="text-xl font-medium mb-2">Account</h2>
+
+    <%= form.label :name, "Username", style: "display: block" %>
+    <%= form.text_field :name, class: "dark:text-teal-900 w-full" %>
+
+    <%= form.label :email, style: "display: block" %>
+    <%= form.text_field :email, class: "dark:text-teal-900 w-full" %>
+
+    <%= form.label :password, "New password", style: "display: block" %>
+    <%= form.password_field :password, value: nil, autocomplete: "new-password", placeholder: "Leave blank to keep it", class: "dark:text-teal-900 w-full" %>
+
+    <%# Not a User column, so a plain tag rather than form.password_field %>
+    <%= label_tag "user[current_password]", "Current password", style: "display: block" %>
+    <%= password_field_tag "user[current_password]", nil, autocomplete: "current-password", class: "dark:text-teal-900 w-full" %>
+    <p class="text-xs text-gray-500 dark:text-neutral-400">Only needed to change your email or password.</p>
+  </div>
+
+  <div class="block max-w-sm mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700">
+    <h2 class="text-xl font-medium mb-2">Preferences</h2>
+
+    <%= form.label :per_page, "Results per page", style: "display: block" %>
+    <%= form.select :per_page, User::PER_PAGE_OPTIONS, {}, class: "dark:text-teal-900 w-full" %>
+
+    <%= form.label :units, style: "display: block" %>
+    <%= form.select :units, User::UNITS.invert, {}, class: "dark:text-teal-900 w-full" %>
+
+    <%= form.label :theme, style: "display: block" %>
+    <%= form.select :theme, User::THEMES.invert, {}, class: "dark:text-teal-900 w-full" %>
+
+    <%= form.label :default_water, "Show species for", style: "display: block" %>
+    <%= form.select :default_water, Species::WATER_TYPES.map { |w| [w.humanize, w] }, { include_blank: "Any water type" }, class: "dark:text-teal-900 w-full" %>
+    <p class="text-xs text-gray-500 dark:text-neutral-400">The catalog's starting filter, and the water type for new tanks.</p>
+
+    <div class="mt-3">
+      <%= form.check_box :scientific_names_first %>
+      <%= form.label :scientific_names_first, "Show scientific names first" %>
+    </div>
+    <div>
+      <%= form.check_box :strict_add_search %>
+      <%= form.label :strict_add_search, "Only suggest species that match a tank's water" %>
+    </div>
+    <div>
+      <%= form.check_box :default_tank_public %>
+      <%= form.label :default_tank_public, "Make new tanks visible to other users" %>
+    </div>
+    <p class="text-xs text-gray-500 dark:text-neutral-400">Each tank can still be changed on its edit page.</p>
+
+    <button type="button" >
+      <%= form.submit "Save", class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    </button>
+  </div>
+<% end %>

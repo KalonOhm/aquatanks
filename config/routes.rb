@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  resources :fishes
+  # "species" is uncountable, so the list page's helper is species_index_path
+  resources :species
   resources :users, except: [:new]
-  resources :aquariums do 
+  resources :aquariums do
     member do
-      post 'add_fish'
-      delete 'remove_fish'
+      post 'add_species'
+      delete 'remove_species'
     end
   end
 
@@ -15,7 +16,7 @@ Rails.application.routes.draw do
   delete '/logout', to: "sessions#destroy"
   get '/sign-up', to: "users#new"
 
-  get 'search_fishes', to: 'fishes#search'
+  get 'search_species', to: 'species#search'
 
-  
+
 end

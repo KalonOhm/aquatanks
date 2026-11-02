@@ -6,24 +6,18 @@
   </div>
 <% end %>
 
-<% if @user_aquariums.empty? %>
+<% if @page.total_count.zero? %>
   <p class="text-center text-lg text-gray-500 dark:text-gray-400">
     <%=@user.name%> doesn't have any aquariums yet. <% if current_user == @user %>
       Click the button above to add one!
     <% end %>
   </p>
+<% elsif @page.total_pages > 1 %>
+  <%= render "shared/pagination", page: @page %>
 <% end %>
 
 <div id="aquariums" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
-<% @user_aquariums.each do |aquarium|%>
-
-  <div class="w-auto mx-auto">
-    <img src="https://img.clipartlook.com/easy-free-clipart-aquarium-clipart-191_165.gif" alt="Aquarium image">
-    <p class="text-xl"><%= aquarium.size %> gallon </p>
-    <p class="text-lg"><%= aquarium.water_type%> aquarium</p>
-    <p class="text-sm">Owner: <%= link_to aquarium.user.name, user_path(aquarium.user) %></p>
-      <%= link_to "See Details", aquarium, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
-  </div>
-
-  <% end %>
+  <%= render partial: "aquariums/card", collection: @user_aquariums, as: :aquarium %>
 </div>
+
+<%= render "shared/pagination", page: @page if @page.total_pages > 1 %>

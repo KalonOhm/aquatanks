@@ -1,8 +1,26 @@
 <!DOCTYPE html>
-<html class="sm:scroll-smooth">
+<%# Theme preference: Tailwind's dark: classes apply when <html> has class "dark" %>
+<html class="sm:scroll-smooth <%= 'dark' if preferences.theme == 'dark' %>">
   <head>
     <title>Aquatanks</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="aquatanks-theme" content="<%= preferences.theme %>">
+    <script>
+      // Sets the "dark" class on <html> from the theme in the meta tag above.
+      // Runs now (before the page paints) and again after every Turbo visit:
+      // Turbo swaps the meta tag but keeps <html>, so logging in or saving a
+      // new theme would otherwise leave the old one showing.
+      if (!window.applyAquatanksTheme) {
+        const darkMedia = matchMedia("(prefers-color-scheme: dark)")
+        window.applyAquatanksTheme = () => {
+          const theme = document.querySelector('meta[name="aquatanks-theme"]')?.content
+          document.documentElement.classList.toggle("dark", theme === "dark" || (theme === "system" && darkMedia.matches))
+        }
+        darkMedia.addEventListener("change", window.applyAquatanksTheme)
+        document.addEventListener("turbo:render", window.applyAquatanksTheme)
+      }
+      window.applyAquatanksTheme()
+    </script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>

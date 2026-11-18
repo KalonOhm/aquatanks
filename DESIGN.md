@@ -17,7 +17,7 @@ Possible next steps that follow naturally from the data, but aren't committed to
 
 - Warn on the tank page when something already stocked doesn't match the tank's water. (The add search already flags mismatches before adding.)
 - Work out the tank's live-plants flag from the plants stocked in it.
-- Scrape the brackish invertebrate and plant lists (see Sources below).
+- Scrape the brackish invertebrate and plant lists (see Sources below). They have no tables (checked Nov 2026), so this would need a separate bullet-list parser rather than new `SpeciesScraper::PAGES` entries.
 
 ## Finding and adding species
 

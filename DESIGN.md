@@ -12,7 +12,6 @@ Aquatanks is a place to record home aquariums and what lives in them.
 ### Planned / open work
 
 - **Typo-tolerant search.** Search matches each word separately, in any order, as part of any name ("sword amazon" finds every Amazon sword), but "anubius" finds nothing. Options: a closest-spelling check in Ruby, or SQLite full-text search with trigrams.
-- **Link to other users' pages** from a tank's "Owner" line.
 - **Validate image URLs.** There's a commented-out `image_url_exists` check in `Species`. Broken images already fall back to a placeholder in the view.
 
 Possible next steps that follow naturally from the data, but aren't committed to:

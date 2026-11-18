@@ -1,4 +1,4 @@
-<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%= @aquarium.user.name %>'s Aquarium</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%= link_to @aquarium.user.name, user_path(@aquarium.user), class: "text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100" %>'s Aquarium</h1>
 
 <%= render @aquarium%>
 

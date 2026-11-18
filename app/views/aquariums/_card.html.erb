@@ -8,7 +8,7 @@
     <% end %>
   </p>
   <p class="text-lg"><%= aquarium.water_type %> aquarium</p>
-  <p class="text-sm">Owner: <%= link_to aquarium.user.name, user_path(aquarium.user) %></p>
+  <p class="text-sm">Owner: <%= link_to aquarium.user.name, user_path(aquarium.user), class: "text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100" %></p>
   <button type="button" >
     <%= link_to "See Details", aquarium, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
   </button>

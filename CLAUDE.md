@@ -80,5 +80,4 @@ Species pictures go through `species_image_tag` ([app/helpers/species_helper.rb]
 - The layout renders `flash`: `alert:` messages are red, everything else (`notice:`) is teal. Use `alert:` for failures.
 - Species CRUD is open to anyone, signed in or not.
 - The aquarium and user controller tests are broken scaffold stubs (missing `aquariums` fixture, no `new_user_url` route), and so are the old aquarium/user system tests. Working tests: `ruby bin/rails test test/models test/helpers test/controllers/species_controller_test.rb test/integration`, then separately `ruby bin/rails test test/system/species_search_test.rb test/system/theme_test.rb` (Chrome). Mixing the two kinds in one command fails. Integration tests sign in with `sign_in_new_user(**preferences)` from test_helper (the users.yml fixtures have no usable password; emails are capped at 20 characters). In system tests click the login *button*: the nav also has a "Login" link.
-- Aquarium index's "Owner" link points at `@user` (nil) instead of `aquarium.user`.
 - Views pull some images from external clipart URLs.

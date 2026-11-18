@@ -33,4 +33,24 @@ class SpeciesTest < ActiveSupport::TestCase
     tetra.update!(alias_list: "skirt tetra, black widow tetra, , skirt tetra")
     assert_equal ["skirt tetra", "black widow tetra"], tetra.reload.alias_names
   end
+
+  test "image_url is optional but must be an http or https URL" do
+    assert Species.new(common_name: "A", image_url: "").valid?
+    assert Species.new(common_name: "A", image_url: "https://upload.wikimedia.org/a.jpg").valid?
+    assert Species.new(common_name: "A", image_url: "http://example.com/a.png").valid?
+    ["not a url", "ftp://example.com/a.jpg", "javascript:alert(1)", "https://", "/images/a.png"].each do |url|
+      species = Species.new(common_name: "A", image_url: url)
+      assert_not species.valid?, url
+      assert species.errors[:image_url].any?, url
+    end
+  end
+
+  test "image_url is normalized before validation" do
+    species = Species.new(common_name: "A", image_url: "  //upload.wikimedia.org/a.jpg ")
+    assert species.valid?
+    assert_equal "https://upload.wikimedia.org/a.jpg", species.image_url
+    blank = Species.new(common_name: "A", image_url: "   ")
+    assert blank.valid?
+    assert_nil blank.image_url
+  end
 end

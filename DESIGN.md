@@ -12,7 +12,6 @@ Aquatanks is a place to record home aquariums and what lives in them.
 ### Planned / open work
 
 - **Typo-tolerant search.** Search matches each word separately, in any order, as part of any name ("sword amazon" finds every Amazon sword), but "anubius" finds nothing. Options: a closest-spelling check in Ruby, or SQLite full-text search with trigrams.
-- **Validate image URLs.** There's a commented-out `image_url_exists` check in `Species`. Broken images already fall back to a placeholder in the view.
 
 Possible next steps that follow naturally from the data, but aren't committed to:
 
@@ -61,7 +60,7 @@ User 1──* Aquarium *──* Species 1──* SpeciesAlias
 ```
 
 - A **Species** is an entry in the catalog, shared by everyone, not an individual animal or plant. It has a `category`: `fish`, `invertebrate`, `plant` or `amphibian`.
-- **Only a name is required.** A species needs a common name or a scientific name. Everything else (picture, size, remarks, water type) is optional, and pages show only the fields that are filled in. A missing or broken picture shows a placeholder image.
+- **Only a name is required.** A species needs a common name or a scientific name. Everything else (picture, size, remarks, water type) is optional, and pages show only the fields that are filled in. A missing or broken picture shows a placeholder image. A picture URL must be a well-formed http/https URL (protocol-relative `//...` is turned into https); it isn't fetched to check it, since there are no external requests at runtime.
 - A **SpeciesAlias** is another common name for a species. Wikipedia often gives several ("Black tetra, skirt tetra"); the first becomes `common_name` and the rest become aliases, so searching any of them finds the species.
 - A row in **aquarium_species** (model `AquariumSpecies`) says "this tank has *count* of this species". `count` can be 0: the species died out, but the tank keeps the entry so the owner remembers what to restock.
 - **Nothing is left pointing at a deleted record.** Deleting a user deletes their tanks, deleting a tank deletes what's stocked in it, and deleting a species from the catalog removes it from every tank. Database foreign keys enforce the same links.

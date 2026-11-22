@@ -19,16 +19,56 @@ class Species < ApplicationRecord
   # Every word of the term must appear somewhere in the common name, scientific
   # name or an alias, in any order and as part of a word: "amazon sword",
   # "sword amazon" and "amaz swo" all find "Amazon sword". Case-insensitive.
+  #
+  # Typos: a word that appears in no name at all is swapped for the closest-spelled
+  # words in the catalog (see similar_words), so "anubius" finds Anubias.
   def self.search(term)
     term.to_s.split.reduce(all) do |scope, word|
-      scope.where(<<~SQL, pattern: "%#{sanitize_sql_like(word)}%")
-        species.common_name LIKE :pattern
-        OR species.taxonomic_name LIKE :pattern
-        OR EXISTS (SELECT 1 FROM species_aliases
-                   WHERE species_aliases.species_id = species.id AND species_aliases.name LIKE :pattern)
-      SQL
+      words = name_matches(word).exists? ? [word] : similar_words(word)
+      next none if words.empty?
+
+      scope.merge(words.map { name_condition(_1) }.reduce(:or))
     end
   end
+
+  # Catalog words (from names and aliases) within a small spelling distance of
+  # word: one letter off for 4–7 letters, two for longer. Shorter words aren't
+  # fuzzed, as nearly everything is one letter away from them. Only the closest
+  # distance found is kept, so a near miss doesn't drown in looser ones.
+  def self.similar_words(word)
+    word = word.downcase
+    max = word.length >= 8 ? 2 : 1
+    return [] if word.length < 4
+
+    by_distance = vocabulary.filter_map do |candidate|
+      next if (candidate.length - word.length).abs > max
+      distance = DidYouMean::Levenshtein.distance(word, candidate)
+      [candidate, distance] if distance <= max
+    end
+    best = by_distance.map(&:last).min
+    by_distance.select { _2 == best }.map(&:first)
+  end
+
+  # Every distinct lowercase word of 4+ letters in the names and aliases. Only
+  # built when a word has no match, and cheap at catalog size (a few thousand words).
+  def self.vocabulary
+    names = unscoped.pluck(:common_name, :taxonomic_name).flatten + SpeciesAlias.pluck(:name)
+    names.compact.flat_map { _1.downcase.scan(/[[:alpha:]]{4,}/) }.uniq
+  end
+
+  def self.name_matches(word)
+    name_condition(word)
+  end
+
+  def self.name_condition(word)
+    unscoped.where(<<~SQL, pattern: "%#{sanitize_sql_like(word)}%")
+      species.common_name LIKE :pattern
+      OR species.taxonomic_name LIKE :pattern
+      OR EXISTS (SELECT 1 FROM species_aliases
+                 WHERE species_aliases.species_id = species.id AND species_aliases.name LIKE :pattern)
+    SQL
+  end
+  private_class_method :name_matches, :name_condition
 
   def alias_names
     aliases.map(&:name)

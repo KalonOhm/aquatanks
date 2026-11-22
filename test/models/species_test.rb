@@ -17,6 +17,26 @@ class SpeciesTest < ActiveSupport::TestCase
     assert_not_includes Species.search("black fern"), tetra     # every word has to match
   end
 
+  test "search tolerates a typo in a word that matches nothing" do
+    tetra = species(:one)
+    assert_includes Species.search("blak tetra"), tetra          # one letter off
+    assert_includes Species.search("Gymnocorymbos"), tetra       # long words allow two
+    assert_includes Species.search("skirr"), tetra               # aliases count too
+    assert_not_includes Species.search("blak fern"), tetra       # other words still have to match
+  end
+
+  test "search doesn't fuzz short words or ones with nothing close" do
+    assert_empty Species.search("blk")               # under 4 letters
+    assert_empty Species.search("qwertyuiop")
+    assert_includes Species.similar_words("blakk"), "black"
+    assert_empty Species.similar_words("bla")
+  end
+
+  test "a word that already matches isn't swapped for look-alikes" do
+    lookalike = Species.create!(common_name: "Blank fish", category: "fish")
+    assert_not_includes Species.search("black"), lookalike
+  end
+
   test "needs a common or scientific name, nothing else" do
     assert Species.new(taxonomic_name: "Anubias barteri").valid?
     assert Species.new(common_name: "Anubias").valid?

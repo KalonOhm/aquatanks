@@ -11,7 +11,6 @@ Aquatanks is a place to record home aquariums and what lives in them.
 
 ### Planned / open work
 
-- **Typo-tolerant search.** Search matches each word separately, in any order, as part of any name ("sword amazon" finds every Amazon sword), but "anubius" finds nothing. Options: a closest-spelling check in Ruby, or SQLite full-text search with trigrams.
 
 Possible next steps that follow naturally from the data, but aren't committed to:
 
@@ -24,7 +23,7 @@ Possible next steps that follow naturally from the data, but aren't committed to
 - **Catalog page** (`/species`): a search box plus category and water filters, all plain GET parameters (`q`, `category`, `water`), so a filtered list can be bookmarked or shared.
 - **Tank page:** the owner adds species through a search-as-you-type box instead of a dropdown of every species. A Stimulus controller ([species_search_controller.js](app/javascript/controllers/species_search_controller.js)) asks `GET /search_species?term=&water=` as you type. Species suited to the tank's water come first; the rest are flagged "doesn't match this tank's water" but can still be added. Picking a result fills a hidden `species_id` and enables the Add button.
 - **Stocked list:** grouped under Fish / Invertebrates / Plants / Amphibians headings, alphabetical within each. A species at 0 is greyed out: "population collapsed" for animals, "none left" for plants.
-- **Search rule** (`Species.search`): every word typed has to appear somewhere in the common name, scientific name or an alias, as part of a word and in any order.
+- **Search rule** (`Species.search`): every word typed has to appear somewhere in the common name, scientific name or an alias, as part of a word and in any order. A word that matches no name at all is treated as a typo and swapped for the closest-spelled catalog words (`Species.similar_words`: Levenshtein distance 1 for 4–7 letters, 2 for 8+, words under 4 letters aren't fuzzed), so "anubius" finds Anubias. It's a closest-spelling check in Ruby over the catalog's words, cheap at a few thousand words; SQLite trigram full-text search is the upgrade if the catalog grows a lot.
 
 ## User preferences
 

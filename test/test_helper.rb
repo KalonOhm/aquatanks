@@ -3,8 +3,9 @@ require_relative "../config/environment"
 require "rails/test_help"
 
 class ActiveSupport::TestCase
-  # Run tests in parallel with specified workers
-  parallelize(workers: :number_of_processors)
+  # Run tests in parallel with specified workers. Windows Ruby can't fork, and
+  # thread workers share one SQLite file and lock each other out, so run serially there.
+  parallelize(workers: Gem.win_platform? ? 1 : :number_of_processors)
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all

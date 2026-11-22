@@ -6,7 +6,11 @@ class Aquarium < ApplicationRecord
     "Brackish Water" => "brackish_water",
   }.freeze
 
+  include HasPhoto
+
   belongs_to :user
+  # The tank's profile picture: card size for lists, large for the tank page
+  has_photo :photo, variants: { card: [576, 432], large: [1200, 900] }
   has_many :aquarium_species, dependent: :destroy
   has_many :species, through: :aquarium_species
 

@@ -12,6 +12,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Extra breakpoint for wide monitors (the catalog grid goes to 5 columns)
+      screens: {
+        '3xl': '1920px',
+      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },

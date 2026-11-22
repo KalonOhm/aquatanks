@@ -1,5 +1,9 @@
 <h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4"><%= link_to @aquarium.user.name, user_path(@aquarium.user), class: "text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100" %>'s Aquarium</h1>
 
+<% if @aquarium.photo.attached? && @aquarium.photo.blob.persisted? %>
+  <%= tank_photo_tag @aquarium, variant: :large, class: "block w-full max-w-xl mx-auto aspect-[4/3] object-cover rounded-lg shadow-lg mb-6" %>
+<% end %>
+
 <%= render @aquarium%>
 
 
@@ -41,8 +45,8 @@
 <% end %>
 
 <% @stock_by_category.each do |category, entries| %>
-  <h2 class="text-xl font-medium mt-8 mb-2 ml-10"><%= SpeciesHelper::CATEGORY_HEADINGS[category] %></h2>
-  <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
+  <h2 class="text-xl font-medium text-center mt-8 mb-2"><%= SpeciesHelper::CATEGORY_HEADINGS[category] %></h2>
+  <div class="flex flex-wrap justify-center gap-6 mx-auto max-w-[96rem]">
     <%= render entries, aquarium: @aquarium %>
   </div>
 <% end %>

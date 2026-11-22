@@ -63,7 +63,7 @@ class UsersController < ApplicationController
 
     def profile_params
       params.require(:user).permit(:name, :email, :password, :per_page, :units, :theme, :default_water,
-        :scientific_names_first, :strict_add_search, :default_tank_public)
+        :scientific_names_first, :strict_add_search, :default_tank_public, :avatar, :remove_avatar)
     end
 
     # You can only edit your own profile

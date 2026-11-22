@@ -117,7 +117,7 @@ class AquariumsController < ApplicationController
     # Only allow a list of trusted parameters through.
     # The form takes the volume in the user's units; it's stored in gallons.
     def aquarium_params
-      permitted = params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate, :public)
+      permitted = params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate, :public, :photo, :remove_photo)
       permitted[:size] = Units.to_gallons(permitted[:size], helpers.preferences.units) if permitted.key?(:size)
       permitted
     end

@@ -28,6 +28,17 @@
     <%= form.label :substrate, "Substrate", style: "display: block" %>
     <%= form.select :substrate, ["Aquarium Sand", "Gravel", "Pebbles", "Pelletized Soil", "Dirt or Clay", "Bare-bottom", "Other"], {}, {:class => "dark:text-teal-900 w-full"} %>
 
+    <%# Upload a new picture, or tick the box to go back to the clipart %>
+    <%= form.label :photo, "Tank photo", style: "display: block" %>
+    <%= form.file_field :photo, accept: HasPhoto::CONTENT_TYPES.join(","), class: "w-full text-sm" %>
+    <p class="text-xs text-gray-500 dark:text-neutral-400">JPEG, PNG, WebP or GIF, up to 10 MB.</p>
+    <% if @aquarium.photo.attached? && @aquarium.photo.blob.persisted? %>
+      <div class="mt-1">
+        <%= form.check_box :remove_photo %>
+        <%= form.label :remove_photo, "Remove current photo" %>
+      </div>
+    <% end %>
+
     <div class="mt-2">
       <%= form.check_box :public %>
       <%= form.label :public, "Visible to other users" %>

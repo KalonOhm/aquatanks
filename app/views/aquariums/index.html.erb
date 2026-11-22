@@ -2,7 +2,8 @@
 
 <%= render "shared/pagination", page: @page %>
 
-<div id="aquariums" class="grid lg:grid-cols-3 md:grid-cols-2 gap-y-4 ml-10">
+<%# Fixed-width cards in centred rows, so a short last row sits in the middle; the max width allows 5 per row %>
+<div id="aquariums" class="flex flex-wrap justify-center gap-6 my-6 mx-auto max-w-[96rem]">
   <%= render partial: "card", collection: @aquariums, as: :aquarium %>
 </div>
 

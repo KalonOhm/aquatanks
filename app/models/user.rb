@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include HasPhoto
+
   PER_PAGE_OPTIONS = [10, 25, 50, 100].freeze
   UNITS = { "us" => "US (gallons, inches, °F)", "metric" => "Metric (litres, cm, °C)" }.freeze
   THEMES = { "system" => "Follow my device", "light" => "Light", "dark" => "Dark" }.freeze
@@ -6,6 +8,8 @@ class User < ApplicationRecord
   validates :name, :email, presence: true, uniqueness: true, length: {minimum: 4, maximum: 20 }
   validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}
   has_secure_password
+  # Profile picture, square; the small one is for owner lines on tank cards
+  has_photo :avatar, variants: { small: [64, 64], large: [320, 320] }
 
   # Preferences, set on the profile page. A guest gets User.new, so these
   # column defaults double as the guest settings (see ApplicationHelper#preferences)

@@ -11,6 +11,7 @@ Aquatanks is a place to record home aquariums and what lives in them.
 
 ### Planned / open work
 
+- **More photos.** Tank profile photos and user avatars are done (Active Storage, see CLAUDE.md). Still to come: a gallery of several photos per tank, and the owner's own photos of a stocked species (attached to its `aquarium_species` entry). Photo URLs should also respect tank privacy (serve them through a controller that runs `require_visible`).
 
 Possible next steps that follow naturally from the data, but aren't committed to:
 

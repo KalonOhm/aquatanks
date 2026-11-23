@@ -4,6 +4,19 @@ module SpeciesHelper
 
   # The onerror swap uses inline JS, so it would need allowing if a
   # Content Security Policy is ever turned on
+  # "Custom" badge with its owner, or the Wikipedia source line, for a species page or card
+  def species_source(species, short: false)
+    if species.official?
+      return if short
+      tag.p(class: "text-xs text-gray-500 dark:text-neutral-400") do
+        safe_join(["From Wikipedia's aquarium species lists. Spot a mistake? See the ", link_to("FAQ", faq_path, class: "underline"), "."])
+      end
+    else
+      tag.span(short ? "Custom" : "Custom species, added by #{species.user.name}",
+        class: "inline-block rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-900 dark:bg-amber-900 dark:text-amber-100")
+    end
+  end
+
   def species_image_tag(species, **options)
     placeholder = image_path(PLACEHOLDER_IMAGE)
     image_tag species.image_url.presence || placeholder,

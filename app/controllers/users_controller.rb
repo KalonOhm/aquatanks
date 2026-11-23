@@ -32,6 +32,11 @@ class UsersController < ApplicationController
       @user_aquariums = paginate(@user.aquariums.visible_to(helpers.current_user).includes(:user).order(created_at: :desc))
     end
 
+  # GET /users/1/avatar/small — profile pictures are public, like user pages
+  def avatar
+    send_photo User.find(params[:id]).avatar, params[:variant], User.avatar_variants, public: true
+  end
+
   # GET /users/1/edit — the profile page: account details and preferences
   def edit
   end

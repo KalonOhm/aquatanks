@@ -6,7 +6,8 @@ module AquariumsHelper
   def tank_photo_tag(aquarium, variant: :card, **options)
     alt = "#{aquarium.user.name}'s aquarium"
     if aquarium.photo.attached? && aquarium.photo.blob.persisted?
-      image_tag aquarium.photo.variant(variant), alt: alt, **options
+      # v= changes with each upload, so a cached old photo is never shown
+      image_tag photo_aquarium_path(aquarium, variant, v: aquarium.photo.blob.id), alt: alt, **options
     else
       image_tag PLACEHOLDER_TANK_IMAGE, alt: alt, **options
     end

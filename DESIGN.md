@@ -9,19 +9,24 @@ Aquatanks is a place to record home aquariums and what lives in them.
 3. **Browse.** Anyone can look through the species catalog and see everyone's tanks. Signed-in users manage their own tanks under "My Tanks".
 4. **Stay small.** Plain Rails with server-rendered views, Tailwind and SQLite. No JavaScript build step and no external services at runtime.
 
+### Official vs custom species
+
+- The catalog is Wikipedia's: official species (no `user_id`) come only from the scrape and can't be edited on the site. Corrections belong on Wikipedia and arrive on the next seed; the FAQ (`/faq`) says so and links the source lists.
+- Users can add **custom species** for anything missing (from the catalog page, or a tank's add box, which stocks it straight away). They belong to their creator, are labelled "Custom", never change the official table, and are visible only to the creator and to people who can see a tank they're stocked in. Nobody else can stock them.
+
 ### Planned / open work
 
-- **More photos.** Tank profile photos and user avatars are done (Active Storage, see CLAUDE.md). Still to come: a gallery of several photos per tank, and the owner's own photos of a stocked species (attached to its `aquarium_species` entry). Photo URLs should also respect tank privacy (serve them through a controller that runs `require_visible`).
+- **Photos of stocked species.** Tank photos, galleries and avatars are done (Active Storage, see CLAUDE.md). Still to come: the owner's own photos of a stocked species, attached to its `aquarium_species` entry. Gallery captions would be a small addition.
 
 Possible next steps that follow naturally from the data, but aren't committed to:
 
-- Warn on the tank page when something already stocked doesn't match the tank's water. (The add search already flags mismatches before adding.)
 - Work out the tank's live-plants flag from the plants stocked in it.
 - Scrape the brackish invertebrate and plant lists (see Sources below). They have no tables (checked Nov 2026), so this would need a separate bullet-list parser rather than new `SpeciesScraper::PAGES` entries.
 
 ## Finding and adding species
 
 - **Catalog page** (`/species`): a search box plus category and water filters, all plain GET parameters (`q`, `category`, `water`), so a filtered list can be bookmarked or shared.
+- **Water mismatches:** each stocked species whose preferred water isn't the tank's is flagged on the tank page, with a banner naming the living ones (`Aquarium#suits?`).
 - **Tank page:** the owner adds species through a search-as-you-type box instead of a dropdown of every species. A Stimulus controller ([species_search_controller.js](app/javascript/controllers/species_search_controller.js)) asks `GET /search_species?term=&water=` as you type. Species suited to the tank's water come first; the rest are flagged "doesn't match this tank's water" but can still be added. Picking a result fills a hidden `species_id` and enables the Add button.
 - **Stocked list:** grouped under Fish / Invertebrates / Plants / Amphibians headings, alphabetical within each. A species at 0 is greyed out: "population collapsed" for animals, "none left" for plants.
 - **Search rule** (`Species.search`): every word typed has to appear somewhere in the common name, scientific name or an alias, as part of a word and in any order. A word that matches no name at all is treated as a typo and swapped for the closest-spelled catalog words (`Species.similar_words`: Levenshtein distance 1 for 4–7 letters, 2 for 8+, words under 4 letters aren't fuzzed), so "anubius" finds Anubias. It's a closest-spelling check in Ruby over the catalog's words, cheap at a few thousand words; SQLite trigram full-text search is the upgrade if the catalog grows a lot.

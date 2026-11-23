@@ -40,8 +40,20 @@
           class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end disabled:opacity-50",
           data: { species_search_target: "submit" } %>
   <% end %>
+  <p class="text-xs mt-1 text-gray-500 dark:text-neutral-400">
+    Not in the catalog? <%= link_to "Add a custom species", new_species_path(aquarium_id: @aquarium.id), class: "underline" %> to this tank.
+  </p>
 </div>
 
+<% end %>
+
+<%= render "gallery", aquarium: @aquarium %>
+
+<% if @mismatched.any? %>
+  <p class="max-w-xl mx-auto mt-8 rounded-lg bg-amber-100 p-3 text-center text-amber-900 shadow dark:bg-amber-900 dark:text-amber-100">
+    ⚠ <%= pluralize(@mismatched.size, "stocked species") %> <%= @mismatched.size == 1 ? "prefers" : "prefer" %> different water
+    from this <%= @aquarium.water_type.downcase %> tank: <%= @mismatched.map { |entry| species_name(entry.species) }.to_sentence %>.
+  </p>
 <% end %>
 
 <% @stock_by_category.each do |category, entries| %>

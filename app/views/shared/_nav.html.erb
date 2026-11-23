@@ -12,6 +12,7 @@
       </button>
       <nav class="hidden space-x-8 text-lg md:block" aria-label="main">
         <span class="hover:opacity-90"><%= link_to 'View Species', species_index_path %></span>
+        <span class="hover:opacity-90"><%= link_to 'FAQ', faq_path %></span>
         <% if logged_in? %>
           <span class="hover:opacity-90"><%= link_to 'AquaTanks', aquariums_path %></span>
           <span class="hover:opacity-90"><%= link_to 'My Tanks', user_path(current_user) %></span>
@@ -29,6 +30,7 @@
   >
     <nav class="flex min-h-screen flex-col items-center py-8" aria-label="mobile">
       <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'View Species', species_index_path %></p>
+      <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'FAQ', faq_path %></p>
       <% if logged_in? %>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'AquaTanks', aquariums_path %></p>
         <p class="w-full py-6 text-center hover:opacity-90"><%= link_to 'My Tanks', user_path(current_user) %></p>

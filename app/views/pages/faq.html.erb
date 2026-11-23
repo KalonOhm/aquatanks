@@ -1,0 +1,79 @@
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-6">Frequently Asked Questions</h1>
+
+<%# Each answer is a card; keep questions short and answers plain. %>
+<% card = "block max-w-2xl mx-auto rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700 mb-4" %>
+<% link = "underline text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100" %>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">Where does the species information come from?</h2>
+  <p>
+    The species catalog is gathered automatically from Wikipedia's lists of freshwater and marine
+    aquarium fish, invertebrates, plants and amphibians. Names, sizes, water types, notes and pictures
+    are taken as Wikipedia has them.
+  </p>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">I found a mistake in a species. How do I fix it?</h2>
+  <p>
+    Please correct it on Wikipedia. Catalog species can't be edited on Aquatanks: the catalog is
+    refreshed from Wikipedia, so a fix made there reaches everyone here on the next update, while an
+    edit made here would be overwritten. The Wikipedia lists we use:
+  </p>
+  <%# Keep in step with SpeciesScraper::PAGES in db/seeds.rb %>
+  <ul class="list-disc ml-6 mt-2">
+    <% %w[freshwater_aquarium_fish brackish_aquarium_fish marine_aquarium_fish
+          freshwater_aquarium_invertebrate marine_aquarium_invertebrate
+          freshwater_aquarium_plant marine_aquarium_plant freshwater_aquarium_amphibian].each do |page| %>
+      <li><%= link_to "List of #{page.tr('_', ' ')} species", "https://en.wikipedia.org/wiki/List_of_#{page}_species", class: link, target: "_blank", rel: "noopener" %></li>
+    <% end %>
+  </ul>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">A species I keep isn't in the catalog. Can I add it?</h2>
+  <p>
+    Yes. Logged-in users can add a <strong>custom species</strong>, from the
+    <%= link_to "species page", species_index_path, class: link %> or from "Add a custom species" under
+    a tank's add box. Custom species are yours alone: they're marked "Custom", only you can edit or delete
+    them, and they never change the official catalog. Other people only see one if it's stocked in a tank
+    they're allowed to see.
+  </p>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">Who can see my tanks and photos?</h2>
+  <p>
+    Public tanks can be seen by anyone, logged in or not. A private tank, and its photo, is visible only to
+    you. You choose this per tank ("Visible to other users"), and set the default for new tanks on your
+    Profile. Your name, profile picture and public tanks are shown on your tanks page.
+  </p>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">Why is a species in my tank flagged for the wrong water?</h2>
+  <p>
+    Each catalog species lists the water it prefers: freshwater, brackish or saltwater. When that doesn't
+    match your tank's water type, the tank page warns you. It's a reminder rather than a rule; some
+    species tolerate more than one, and some appear in the catalog once per water type.
+  </p>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">What photos can I upload?</h2>
+  <p>
+    JPEG, PNG, WebP or GIF images up to 10 MB, for a tank's main photo, its gallery (up to 30 photos of your
+    setup and livestock, added on the tank page) or your profile picture. Gallery photos follow the tank's
+    privacy setting. iPhone HEIC photos
+    aren't supported yet; most phones convert to JPEG when you share or export a photo.
+  </p>
+</section>
+
+<section class="<%= card %>">
+  <h2 class="text-xl font-medium mb-2">Can I use metric units, dark mode or scientific names?</h2>
+  <p>
+    Yes. Your <% if logged_in? %><%= link_to "Profile", edit_user_path(current_user), class: link %><% else %>Profile<% end %>
+    has preferences for units (gallons or litres), theme, results per page, showing scientific names first,
+    and a default water type for the catalog.
+  </p>
+</section>

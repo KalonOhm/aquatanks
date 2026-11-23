@@ -8,6 +8,11 @@
     <% else %>
         <p><%= aquarium_species.count %> × <%= link_to species_name(aquarium_species.species), aquarium_species.species %></p>
     <% end %>
+    <% unless aquarium.suits?(aquarium_species.species) %>
+        <p class="w-full text-xs text-amber-700 dark:text-amber-300">
+            ⚠ Prefers <%= aquarium_species.species.preferred_water.humanize.downcase %>; this is a <%= aquarium.water_type.downcase %> tank.
+        </p>
+    <% end %>
     <% if current_user == aquarium.user %>
     <%= button_to "+", add_species_aquarium_path(aquarium),
             method: :post,

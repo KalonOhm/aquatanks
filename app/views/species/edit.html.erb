@@ -1,10 +1,8 @@
-<h1>Editing species</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Edit custom species</h1>
 
 <%= render "form", species: @species %>
 
-<br>
-
-<div>
-  <%= link_to "Show this species", @species %> |
-  <%= link_to "Back to species", species_index_path %>
-</div>
+<p class="text-center mt-4">
+  <%= link_to "Show this species", @species, class: "underline" %> |
+  <%= link_to "Back to species", species_index_path, class: "underline" %>
+</p>

@@ -20,6 +20,8 @@ class User < ApplicationRecord
 
   # deleting a user also deletes their tanks (and, through Aquarium, what's stocked in them)
   has_many :aquariums, dependent: :destroy
+  # Species this user added themselves (destroyed after their tanks, which are the only place they're stocked)
+  has_many :custom_species, class_name: "Species", dependent: :destroy
 
   def metric?
     units == "metric"

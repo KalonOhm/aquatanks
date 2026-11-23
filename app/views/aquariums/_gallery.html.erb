@@ -1,0 +1,54 @@
+<%# The tank's photo gallery (Aquarium#gallery_photos). Photos are served by
+    aquariums#gallery_photo, behind the same privacy check as the tank. %>
+<% owner = current_user == aquarium.user %>
+<% photos = aquarium.gallery_photos.attachments.select(&:persisted?) %>
+<% if photos.any? || owner %>
+  <section id="gallery" class="mt-8">
+    <h2 class="text-xl font-medium text-center mb-2">Gallery</h2>
+
+    <% if photos.empty? %>
+      <p class="text-center text-sm text-gray-500 dark:text-neutral-400">
+        No gallery photos yet. Show off your setup, aquascape or favourite livestock.
+      </p>
+    <% else %>
+      <div class="flex flex-wrap justify-center gap-4 mx-auto max-w-[96rem]">
+        <% photos.each do |photo| %>
+          <figure class="w-60 rounded-lg bg-white p-2 shadow dark:bg-neutral-700">
+            <%# The thumbnail opens the whole (uncropped) picture %>
+            <%= link_to gallery_photo_aquarium_path(aquarium, photo.id, :full), target: "_blank", rel: "noopener" do %>
+              <%= image_tag gallery_photo_aquarium_path(aquarium, photo.id, :thumb),
+                    alt: "Photo of #{aquarium.user.name}'s aquarium", loading: "lazy",
+                    class: "w-full aspect-[4/3] object-cover rounded" %>
+            <% end %>
+            <% if owner %>
+              <figcaption class="flex justify-between mt-1">
+                <%= button_to "Make main photo", feature_gallery_photo_aquarium_path(aquarium, photo.id), method: :patch,
+                      class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+                <%= button_to "Delete", remove_gallery_photo_aquarium_path(aquarium, photo.id), method: :delete,
+                      form: { data: { turbo_confirm: "Delete this photo from the gallery?" } },
+                      class: "text-xs inline-block rounded bg-red-700 dark:bg-red-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+              </figcaption>
+            <% end %>
+          </figure>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if owner %>
+      <% if photos.size < Aquarium::GALLERY_LIMIT %>
+        <%= form_with url: gallery_photos_aquarium_path(aquarium), class: "flex flex-wrap items-end justify-center gap-2 mt-4" do |form| %>
+          <div>
+            <%= form.label :photos, "Add photos", class: "block text-sm" %>
+            <%= form.file_field :photos, multiple: true, accept: HasPhoto::CONTENT_TYPES.join(","), class: "text-sm" %>
+          </div>
+          <%= form.submit "Upload", class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+        <% end %>
+        <p class="text-center text-xs text-gray-500 dark:text-neutral-400 mt-1">
+          JPEG, PNG, WebP or GIF, up to 10 MB each; <%= photos.size %> of <%= Aquarium::GALLERY_LIMIT %> used.
+        </p>
+      <% else %>
+        <p class="text-center text-sm mt-4">The gallery is full (<%= Aquarium::GALLERY_LIMIT %> photos). Delete one to add more.</p>
+      <% end %>
+    <% end %>
+  </section>
+<% end %>

@@ -1,6 +1,14 @@
 <h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Species Facts</h1>
 <div class="" >
   <%= render @species %>
+  <% if @species.editable_by?(current_user) %>
+    <button type="button">
+      <%= link_to "Edit", edit_species_path(@species), class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+    </button>
+    <%= button_to "Delete", @species, method: :delete,
+          form: { class: "inline-block", data: { turbo_confirm: "Delete this custom species? It will also be removed from your tanks." } },
+          class: "text-xs inline-block rounded bg-red-700 dark:bg-red-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
+  <% end %>
   <button type="button" >
     <%= link_to "Back to Species List", species_index_path, {:class => "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end  "} %>
   </button>

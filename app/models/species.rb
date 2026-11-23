@@ -2,7 +2,16 @@ class Species < ApplicationRecord
   CATEGORIES = %w[fish invertebrate plant amphibian].freeze
   WATER_TYPES = %w[freshwater brackish_water saltwater].freeze
 
-  # deleting a species from the catalog also removes it from every tank
+  # Official species come from the Wikipedia scrape (db/seeds.rb) and have no
+  # user; they can't be changed through the site. Custom species are a user's
+  # own additions: only that user can edit them or stock them, and they never
+  # change the official catalog.
+  belongs_to :user, optional: true
+  scope :official, -> { where(user_id: nil) }
+  # What a user can browse and stock: the official catalog plus their own
+  scope :available_to, ->(user) { where(user_id: [nil, user&.id].uniq) }
+
+  # deleting a species also removes it from every tank
   has_many :aquarium_species, dependent: :destroy
   has_many :aquariums, through: :aquarium_species
   has_many :aliases, class_name: "SpeciesAlias", dependent: :destroy
@@ -69,6 +78,20 @@ class Species < ApplicationRecord
     SQL
   end
   private_class_method :name_matches, :name_condition
+
+  def official?
+    user_id.nil?
+  end
+
+  def editable_by?(user)
+    !official? && user.present? && user_id == user.id
+  end
+
+  # Official species are public. A custom one is seen by its owner and by anyone
+  # who can see a tank it's stocked in.
+  def visible_to?(user)
+    official? || (user.present? && user_id == user.id) || aquariums.visible_to(user).exists?
+  end
 
   def alias_names
     aliases.map(&:name)

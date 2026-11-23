@@ -1,8 +1,8 @@
 class AquariumsController < ApplicationController
   before_action :require_user, only: %i[ new create ]
-  before_action :set_aquarium, only: %i[ show edit update destroy add_species remove_species ]
-  before_action :require_visible, only: %i[ show edit update destroy add_species remove_species ]
-  before_action :require_owner, only: %i[ edit update destroy add_species remove_species ]
+  before_action :set_aquarium, only: %i[ show photo gallery_photo edit update destroy add_species remove_species add_gallery_photos remove_gallery_photo feature_gallery_photo ]
+  before_action :require_visible, only: %i[ show photo gallery_photo edit update destroy add_species remove_species add_gallery_photos remove_gallery_photo feature_gallery_photo ]
+  before_action :require_owner, only: %i[ edit update destroy add_species remove_species add_gallery_photos remove_gallery_photo feature_gallery_photo ]
 
   # GET /aquariums or /aquariums.json
   # Public tanks, plus the viewer's own private ones
@@ -17,6 +17,45 @@ class AquariumsController < ApplicationController
       .sort_by { |entry| helpers.species_name(entry.species).downcase }
       .group_by { |entry| entry.species.category }
       .sort_by { |category, _| Species::CATEGORIES.index(category) }
+    # Still-living stock whose preferred water isn't the tank's (entries at 0 don't count)
+    @mismatched = @stock_by_category.flat_map(&:last)
+      .select { |entry| entry.count.positive? && !@aquarium.suits?(entry.species) }
+  end
+
+  # GET /aquariums/1/photo/card — the tank's photo, only for people who can see the tank
+  def photo
+    send_photo @aquarium.photo, params[:variant], Aquarium.photo_variants, public: @aquarium.public?
+  end
+
+  # GET /aquariums/1/gallery/5/thumb — one gallery photo (5 is its attachment id)
+  def gallery_photo
+    send_photo gallery_attachment, params[:variant], Aquarium.gallery_photos_variants, public: @aquarium.public?
+  end
+
+  # POST /aquariums/1/gallery — adds the uploaded photos (photos[]) to the gallery
+  def add_gallery_photos
+    files = Array(params[:photos]).compact_blank
+    return redirect_to(@aquarium, alert: "Choose one or more photos to upload.") if files.empty?
+
+    if @aquarium.gallery_photos.attach(files)
+      redirect_to @aquarium, notice: "Added #{helpers.pluralize(files.size, 'photo')} to the gallery."
+    else
+      redirect_to @aquarium, alert: @aquarium.errors.full_messages.to_sentence
+    end
+  end
+
+  # DELETE /aquariums/1/gallery/5
+  def remove_gallery_photo
+    gallery_attachment.purge_later
+    redirect_to @aquarium, notice: "Photo removed from the gallery."
+  end
+
+  # PATCH /aquariums/1/gallery/5/feature — makes a gallery photo the tank's main
+  # photo. It's copied, so deleting either one later doesn't affect the other.
+  def feature_gallery_photo
+    picked = gallery_attachment
+    @aquarium.photo.attach(io: StringIO.new(picked.download), filename: picked.filename.to_s, content_type: picked.content_type)
+    redirect_to @aquarium, notice: "Main photo updated."
   end
 
   # GET /aquariums/new
@@ -74,7 +113,8 @@ class AquariumsController < ApplicationController
   # If that species is already in the tank, its existing entry's count goes up instead of
   # creating a duplicate entry.
   def add_species
-    @species = Species.find(params[:species_id]) #TODO: figure out how to search species field
+    # The official catalog or the owner's own custom species, never someone else's
+    @species = Species.available_to(@aquarium.user).find(params[:species_id])
     count = (params[:count] || 1).to_i
     if count < 1
       return redirect_to @aquarium, alert: "You can only add 1 or more."
@@ -120,6 +160,11 @@ class AquariumsController < ApplicationController
       permitted = params.require(:aquarium).permit(:size, :water_type, :filter, :plants, :substrate, :public, :photo, :remove_photo)
       permitted[:size] = Units.to_gallons(permitted[:size], helpers.preferences.units) if permitted.key?(:size)
       permitted
+    end
+
+    # A gallery photo of this tank, by attachment id (404 for any other)
+    def gallery_attachment
+      @aquarium.gallery_photos.find(params[:photo_id])
     end
 
     def require_visible

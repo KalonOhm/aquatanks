@@ -21,6 +21,13 @@
   <% end %>
 <% end %>
 
+<% if logged_in? %>
+  <p class="text-center text-sm mb-2">
+    Missing something? <%= link_to "Add a custom species", new_species_path, class: "underline" %>
+    (only you and people who can see your tanks will see it).
+  </p>
+<% end %>
+
 <%= render "shared/pagination", page: @page %>
 
 <%# Fixed-width cards in centred rows, so a short last row sits in the middle. 19rem fits 3 per row on lg,
@@ -35,6 +42,7 @@
         <p class="break-words <%= 'italic' unless scientific_first?(species) %>"><%= other_name %></p>
       <% end %>
       <p class="text-sm text-gray-500 dark:text-neutral-400"><%= species_kind(species) %></p>
+      <% unless species.official? %><div><%= species_source(species, short: true) %></div><% end %>
       <button type="button" class="mt-auto self-start">
         <%= link_to "More info...", species, class: "text-xs inline-block rounded bg-teal-700 dark:bg-teal-500 px-3 pt-2 pb-1.5 mt-1.5 self-end" %>
       </button>

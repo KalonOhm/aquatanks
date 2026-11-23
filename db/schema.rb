@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_22_223436) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_22_230000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -71,7 +71,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_22_223436) do
     t.datetime "updated_at", null: false
     t.string "preferred_water"
     t.string "category", default: "fish", null: false
+    t.integer "user_id"
     t.index ["category"], name: "index_species_on_category"
+    t.index ["user_id"], name: "index_species_on_user_id"
   end
 
   create_table "species_aliases", force: :cascade do |t|
@@ -103,5 +105,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_22_223436) do
   add_foreign_key "aquarium_species", "aquariums"
   add_foreign_key "aquarium_species", "species"
   add_foreign_key "aquariums", "users"
+  add_foreign_key "species", "users"
   add_foreign_key "species_aliases", "species"
 end

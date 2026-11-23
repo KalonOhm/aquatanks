@@ -1,9 +1,9 @@
-<h1>New species</h1>
+<h1 class="text-center underline underline-offset-4 text-3xl font-medium mb-4">Add a custom species</h1>
+<p class="max-w-sm mx-auto mb-4 text-sm text-center">
+  Custom species are yours: they don't change the official catalog, and only you and people who can
+  see a tank you stock them in will see them.
+</p>
 
 <%= render "form", species: @species %>
 
-<br>
-
-<div>
-  <%= link_to "Back to species", species_index_path %>
-</div>
+<p class="text-center mt-4"><%= link_to "Back to species", species_index_path, class: "underline" %></p>

@@ -165,8 +165,9 @@ species_master_list = SpeciesScraper.scrape_all
 Species.transaction do
   species_master_list.each do |attrs|
     match = attrs.slice(:taxonomic_name, :preferred_water, :category)
-    species = Species.find_by(match.merge(common_name: attrs[:common_name])) ||
-              Species.find_by(match.merge(common_name: attrs[:old_common_name])) ||
+    # Only official rows: users' custom species are never matched or overwritten
+    species = Species.official.find_by(match.merge(common_name: attrs[:common_name])) ||
+              Species.official.find_by(match.merge(common_name: attrs[:old_common_name])) ||
               Species.new(match)
     # .compact: a value missing from Wikipedia this time doesn't wipe one saved earlier
     species.assign_attributes(attrs.except(:aliases, :old_common_name).compact)
